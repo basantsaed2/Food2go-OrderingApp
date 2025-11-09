@@ -255,11 +255,13 @@ const resources = {
       BrowseProducts: "Browse Products",
       TryAgain: "Try Again",
       noFavoritesMessage: "No favorites yet. Start adding items you love!",
+      inYourFavorites: "in your favorites",
       pendingorder: "pending order",
       pendingorders: "pending orders",
       pastorder: "past order",
       pastorders: "past orders",
       Qty: "Qty",
+
 
       PendingOrders: "Pending Orders",
       OrderHistory: "Order History",
@@ -322,6 +324,7 @@ const resources = {
       pastorder: "طلب سابق",
       pastorders: "طلبات سابقة",
       noFavoritesMessage: "لا توجد مفضلات بعد. ابدأ بإضافة العناصر التي تحبها!",
+      inYourFavorites: "في المفضلة",
       MyFavorites: "مفضلتي",
       Nofavorites: "لا توجد مفضلات",
       Somethingwentwrong: "حدث خطأ ما",

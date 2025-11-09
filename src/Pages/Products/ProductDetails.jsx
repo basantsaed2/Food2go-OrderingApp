@@ -3,6 +3,7 @@ import { X, Plus, Minus, Heart } from 'lucide-react';
 import { useGet } from '../../Hooks/useGet';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '../../Store/Slices/cartSlice';
+import { toggleFavorite, setFavorite } from '../../Store/Slices/favoritesSlice'; // Import actions
 import { useChangeState } from '../../Hooks/useChangeState';
 import StaticSpinner from '../../Components/Spinners/StaticSpinner';
 import { useTranslation } from 'react-i18next';
@@ -17,13 +18,17 @@ const ProductDetails = ({ product, onClose, language }) => {
   const { changeState, loadingChange } = useChangeState();
   const auth = useAuth();
   const token = useSelector((state) => state?.user?.data?.token || '');
+  
+  // Get favorite status from Redux
+  const favorites = useSelector((state) => state.favorites.items);
+  const isFavorite = favorites[product.id] ?? product.favourite;
+
   const [quantity, setQuantity] = useState(1);
   const [selectedVariations, setSelectedVariations] = useState({});
   const [selectedAddons, setSelectedAddons] = useState({});
   const [selectedExcludes, setSelectedExcludes] = useState([]);
   const [selectedExtras, setSelectedExtras] = useState({});
   const [note, setNote] = useState('');
-  const [isFavorite, setIsFavorite] = useState(product.favourite || false);
   const [displayProduct, setDisplayProduct] = useState(product);
   const user = useSelector(state => state.user?.data?.user);
   const selectedLanguage = useSelector(state => state.language?.selected || 'en');
@@ -67,7 +72,15 @@ const ProductDetails = ({ product, onClose, language }) => {
   useEffect(() => {
     if (productDetails && !loadingProductDetails) {
       setDisplayProduct(productDetails.product || product);
-      setIsFavorite(productDetails.product?.favourite || false);
+      
+      // Update Redux state with the latest favorite status from API
+      if (productDetails.product?.favourite !== undefined) {
+        dispatch(setFavorite({ 
+          productId: product.id, 
+          isFavorite: productDetails.product.favourite 
+        }));
+      }
+      
       const initialAddons = {};
       productDetails.addons?.forEach((addon) => {
         initialAddons[addon.id] = {
@@ -82,7 +95,7 @@ const ProductDetails = ({ product, onClose, language }) => {
       });
       setSelectedExtras(initialExtras);
     }
-  }, [productDetails, product, loadingProductDetails]);
+  }, [productDetails, product, loadingProductDetails, dispatch]);
 
   const handleVariationChange = (variationId, optionId, type) => {
     if (type === 'single') {
@@ -150,20 +163,33 @@ const ProductDetails = ({ product, onClose, language }) => {
     }
   };
 
-  const handleFavoriteToggle = async (product) => {
+  const handleFavoriteToggle = async () => {
     if (!token) {
       auth.toastError(t('pleaseLogin'));
       return;
     }
-    const newFavoriteState = !product.favourite;
+    
+    const newFavoriteState = !isFavorite;
     const url = `${apiUrl}/customer/home/favourite/${product.id}`;
+    
     const success = await changeState(
       url,
       newFavoriteState ? `${product.name} ${t('addedToFavorites')}` : `${product.name} ${t('removedFromFavorites')}`,
       { favourite: newFavoriteState ? 1 : 0 }
     );
+    
     if (success) {
-      setIsFavorite(newFavoriteState);
+      // Update Redux state
+      dispatch(toggleFavorite({ 
+        productId: product.id, 
+        isFavorite: newFavoriteState 
+      }));
+      
+      // Update local display product
+      setDisplayProduct(prev => ({
+        ...prev,
+        favourite: newFavoriteState
+      }));
     }
   };
 
@@ -320,20 +346,20 @@ const ProductDetails = ({ product, onClose, language }) => {
             {/* Favorite Button */}
             {user && (
               <button
-                onClick={() => handleFavoriteToggle(displayData)}
+                onClick={handleFavoriteToggle}
                 disabled={loadingChange}
-                className={`p-2 rounded-full transition-colors ${displayData.favourite
+                className={`p-2 rounded-full transition-colors ${isFavorite
                   ? "text-red-500 bg-red-50"
                   : "text-gray-400 hover:text-red-500 hover:bg-red-50"
                   }`}
                 title={
-                  displayData.favourite
+                  isFavorite
                     ? t("removeFromFavorites")
                     : t("addToFavorites")
                 }
               >
                 <Heart
-                  className={`h-5 w-5 ${displayData.favourite ? "fill-current" : ""}`}
+                  className={`h-5 w-5 ${isFavorite ? "fill-current" : ""}`}
                 />
               </button>
             )}

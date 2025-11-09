@@ -2,9 +2,10 @@ import userReducer from './Slices/userSlice';
 import maintenanceReducer from './Slices/maintenanceSlice';
 import languageReducer from './Slices/languageSlice';
 import mainDataReducer from './Slices/mainDataSlice';
-import taxTypeSlice from './Slices/taxTypeSlice'; // Add this import
+import taxTypeSlice from './Slices/taxTypeSlice';
 import cartSlice from './Slices/cartSlice';
 import orderTypeSlice from './Slices/orderTypeSlice';
+import favoritesSlice from './Slices/favoritesSlice'; // Add this import
 import { configureStore } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
@@ -16,14 +17,15 @@ const reducers = combineReducers({
   language: languageReducer,
   mainData: mainDataReducer,
   cart: cartSlice,
-  taxType : taxTypeSlice,
+  taxType: taxTypeSlice,
   orderType: orderTypeSlice,
+  favorites: favoritesSlice, // Add favorites reducer
 });
 
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['user','mainData','maintenance','language'], // Only persist 'user' state
+  whitelist: ['user', 'mainData', 'maintenance', 'language', 'favorites'], // Add 'favorites' to persisted state
 };
 
 const persistedReducer = persistReducer(persistConfig, reducers);

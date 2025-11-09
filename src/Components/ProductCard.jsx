@@ -3,14 +3,15 @@ import { Heart, Plus } from 'lucide-react';
 import ProductDetails from '../Pages/Products/ProductDetails';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '../Store/Slices/cartSlice';
+import { toggleFavorite } from '../Store/Slices/favoritesSlice'; // Import the action
 import { useChangeState } from '../Hooks/useChangeState';
 import { useAuth } from '../Context/Auth';
 import { useTranslation } from 'react-i18next';
 
 const ProductCard = ({
   product,
-  isFavorite: initialIsFavorite = false,
   language = 'en',
+  onFavoriteToggle
 }) => {
   const { t } = useTranslation();
   const apiUrl = import.meta.env.VITE_API_BASE_URL;
@@ -20,8 +21,11 @@ const ProductCard = ({
   const auth = useAuth();
   const user = useSelector(state => state.user?.data?.user);
 
+  // Get favorite status from Redux
+  const favorites = useSelector((state) => state.favorites.items);
+  const isCardFavorite = favorites[product.id] ?? product.favourite;
+
   // Card state
-  const [isCardFavorite, setIsCardFavorite] = useState(initialIsFavorite);
   const [showProductDialog, setShowProductDialog] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
@@ -32,15 +36,27 @@ const ProductCard = ({
       auth.toastError(t('pleaseLogin'));
       return;
     }
+    
     const newFavoriteState = !isCardFavorite;
     const url = `${apiUrl}/customer/home/favourite/${product.id}`;
+    
     const success = await changeState(
       url,
       `${product.name} ${newFavoriteState ? t('addedToFavorites') : t('removedFromFavorites')}`,
       { favourite: newFavoriteState ? 1 : 0 }
     );
+    
     if (success) {
-      setIsCardFavorite(newFavoriteState);
+      // Update Redux state
+      dispatch(toggleFavorite({ 
+        productId: product.id, 
+        isFavorite: newFavoriteState 
+      }));
+
+      // Call parent callback if provided
+      if (onFavoriteToggle) {
+        onFavoriteToggle(product, newFavoriteState);
+      }
     }
   };
 
@@ -92,7 +108,6 @@ const ProductCard = ({
           >
             <Heart className={`h-4 w-4 ${isCardFavorite ? 'fill-current' : ''}`} />
           </button>
-
         )}
         {/* Product Image */}
         <div className="w-32 flex-shrink-0 relative overflow-hidden">

@@ -1,8 +1,8 @@
-// FavoriteProducts.jsx
 import React, { useEffect, useState } from 'react';
 import StaticSpinner from '../../Components/Spinners/StaticSpinner';
 import { useGet } from '../../Hooks/useGet';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { removeFavorite } from '../../Store/Slices/favoritesSlice'; // Import action
 import ProductCard from '../../Components/ProductCard';
 import { useTranslation } from 'react-i18next';
 
@@ -11,7 +11,8 @@ const FavoriteProducts = () => {
   const apiUrl = import.meta.env.VITE_API_BASE_URL;
   const selectedLanguage = useSelector((state) => state.language?.selected ?? 'en');
   const token = useSelector(state => state?.user?.data?.token || '');
-  
+  const dispatch = useDispatch();
+
   const [favorites, setFavorites] = useState([]);
   const [loadingFavorites, setLoadingFavorites] = useState(true);
   const [error, setError] = useState(null);
@@ -48,10 +49,16 @@ const FavoriteProducts = () => {
   }, [dataFavorites, apiLoading, apiError, token]);
 
   // Handle favorite toggle (remove from favorites list)
-  const handleFavoriteToggle = (product, newFavoriteState) => {
+  const handleFavoriteToggle = async (product, newFavoriteState) => {
     if (!newFavoriteState) {
-      // Remove from local state when unfavorited
+      // Remove from local state immediately
       setFavorites(prev => prev.filter(p => p.id !== product.id));
+      
+      // Remove from Redux state
+      dispatch(removeFavorite(product.id));
+
+      // Refetch from API to sync state
+      await refetchFavorites();
     }
   };
 
@@ -104,9 +111,9 @@ const FavoriteProducts = () => {
         <div className="mb-6">
           <h1 className="mb-2 text-2xl font-bold text-mainColor">{t('MyFavorites')}</h1>
           <p className="text-gray-600">
-            {favorites.length > 0 
-              ? `${favorites.length} item${favorites.length !== 1 ? 's' : ''} in your favorites` 
-              :t('noFavoritesMessage')
+            {favorites.length > 0
+              ? `${favorites.length} ${favorites.length === 1 ? t('item') : t('items')} ${t('inYourFavorites')}`
+              : t('noFavoritesMessage')
             }
           </p>
         </div>
