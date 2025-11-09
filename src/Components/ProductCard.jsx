@@ -84,14 +84,15 @@ const ProductCard = ({
         {user && (
           <button
             onClick={handleCardFavoriteToggle}
-            className={`absolute top-2 right-2 z-10 p-1 rounded-full transition-all duration-200 ${isCardFavorite
-                ? 'text-red-500 bg-white shadow-sm'
-                : 'text-gray-400 bg-white/80 hover:text-red-500 hover:bg-white'
+            className={`absolute top-2 ${language === 'ar' ? 'left-2' : 'right-2'} z-10 p-1 rounded-full transition-all duration-200 ${isCardFavorite
+              ? 'text-red-500 bg-white shadow-sm'
+              : 'text-gray-400 bg-white/80 hover:text-red-500 hover:bg-white'
               }`}
             title={isCardFavorite ? t('removeFromFavorites') : t('addToFavorites')}
           >
             <Heart className={`h-4 w-4 ${isCardFavorite ? 'fill-current' : ''}`} />
           </button>
+
         )}
         {/* Product Image */}
         <div className="w-32 flex-shrink-0 relative overflow-hidden">
@@ -99,11 +100,6 @@ const ProductCard = ({
             src={product.image_link}
             alt={product.name}
             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-            onError={(e) => {
-              e.target.src =
-                'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjNmNGY2Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJtb25vc3BhY2UiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiM5YzlkYWEiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIwLjM1ZW0iPk5vIEltYWdlPC90ZXh0Pjwvc3ZnPg==';
-              e.target.style.objectFit = 'contain';
-            }}
           />
         </div>
         {/* Product Content */}
@@ -113,7 +109,7 @@ const ProductCard = ({
               {product.name}
             </h3>
             <p className="text-gray-600 text-xs mb-2 line-clamp-2 leading-relaxed">
-              {product.description === 'null' ? '' : product.description }
+              {product.description === 'null' ? '' : product.description}
             </p>
           </div>
           <div className="flex justify-between items-center">
