@@ -215,49 +215,54 @@ const ProductDetails = ({ product, onClose, language }) => {
     return productDetails.allExtras.filter((extra) => isExtraAvailable(extra));
   };
 
-  const calculateTotalPrice = () => {
-    if (!productDetails) return (product.price_after_discount || product.price) * quantity;
+const calculateTotalPrice = () => {
+  if (!productDetails) return (product.price_after_discount || product.price) * quantity;
 
-    let total = parseFloat(productDetails.price_after_discount || productDetails.price);
+  let total = parseFloat(productDetails.price_after_discount || productDetails.price);
 
-    // Add variation prices
-    Object.values(selectedVariations).forEach((optionIds) => {
-      if (Array.isArray(optionIds)) {
-        optionIds.forEach((optionId) => {
-          const option = productDetails.variations
-            .flatMap((v) => v.options)
-            .find((o) => o.id === optionId);
-          if (option) total += parseFloat(option.price);
-        });
-      } else {
+  // Add variation prices (multiplied by quantity - KEEP AS IS)
+  Object.values(selectedVariations).forEach((optionIds) => {
+    if (Array.isArray(optionIds)) {
+      optionIds.forEach((optionId) => {
         const option = productDetails.variations
           .flatMap((v) => v.options)
-          .find((o) => o.id === optionIds);
+          .find((o) => o.id === optionId);
         if (option) total += parseFloat(option.price);
-      }
-    });
+      });
+    } else {
+      const option = productDetails.variations
+        .flatMap((v) => v.options)
+        .find((o) => o.id === optionIds);
+      if (option) total += parseFloat(option.price);
+    }
+  });
 
-    // Add addon prices
-    Object.entries(selectedAddons).forEach(([addonId, addonData]) => {
-      if (addonData.checked) {
-        const addon = productDetails.addons?.find((a) => a.id === parseInt(addonId));
-        if (addon) {
-          const addonQty = addonData.quantity || 1;
-          total += parseFloat(addon.price) * addonQty;
-        }
-      }
-    });
+  // Multiply base product + variations by quantity
+  total = total * quantity;
 
-    // Add extra prices (use price_after_discount for extras)
-    Object.entries(selectedExtras).forEach(([extraId, extraQty]) => {
-      const extra = productDetails.allExtras?.find((e) => e.id === parseInt(extraId));
-      if (extra && extraQty > 0 && isExtraAvailable(extra)) {
-        total += parseFloat(extra.price_after_discount || extra.price) * extraQty;
+  // Add addon prices (NOT multiplied by product quantity - FIX ONLY THIS)
+  Object.entries(selectedAddons).forEach(([addonId, addonData]) => {
+    if (addonData.checked) {
+      const addon = productDetails.addons?.find((a) => a.id === parseInt(addonId));
+      if (addon) {
+        const addonQty = addonData.quantity || 1;
+        // Addon price is multiplied only by addon quantity, not product quantity
+        total += parseFloat(addon.price) * addonQty;
       }
-    });
+    }
+  });
 
-    return total * quantity;
-  };
+  // Add extra prices (KEEP multiplied by product quantity - NO CHANGE)
+  Object.entries(selectedExtras).forEach(([extraId, extraQty]) => {
+    const extra = productDetails.allExtras?.find((e) => e.id === parseInt(extraId));
+    if (extra && extraQty > 0 && isExtraAvailable(extra)) {
+      // Extra price is multiplied by both extra quantity AND product quantity (KEEP AS IS)
+      total += parseFloat(extra.price_after_discount || extra.price) * extraQty * quantity;
+    }
+  });
+
+  return total;
+};
 
   const validateVariationSelection = (variation) => {
     if (!variation.required) return true;
