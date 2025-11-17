@@ -314,7 +314,7 @@ const Products = () => {
                   <button
                     key={category.id}
                     onClick={() => handleCategoryClick(category.id)}
-                    className={`flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                    className={`flex-shrink-0 px-4 py-2 rounded-full text-lg font-medium transition-colors ${
                       selectedCategory === category.id
                         ? 'bg-mainColor text-white'
                         : 'bg-gray-100 text-gray-800 hover:bg-gray-200'

@@ -207,7 +207,7 @@ const Categories = () => {
                       <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-black/80 via-black/50 to-transparent"></div>
 
                       <div className="absolute bottom-0 left-0 right-0 p-3">
-                        <h3 className={`text-white font-semibold text-sm text-center line-clamp-2 ${isRTL ? 'text-right' : 'text-left'}`}>
+                        <h3 className={`text-white font-semibold text-lg text-center line-clamp-2 ${isRTL ? 'text-right' : 'text-left'}`}>
                           {category.name}
                         </h3>
                       </div>

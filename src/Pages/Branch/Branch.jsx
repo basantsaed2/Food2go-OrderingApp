@@ -12,19 +12,21 @@ import { MdOutlineDirections } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
 import { useGet } from '../../Hooks/useGet';
 import StaticSpinner from '../../Components/Spinners/StaticSpinner';
+import { useSelector } from 'react-redux';
 
 const Branch = () => {
   const { t, i18n } = useTranslation();
   const apiUrl = import.meta.env.VITE_API_BASE_URL;
+  const selectedLanguage = useSelector((state) => state.language?.selected ?? 'en');
   const { refetch: refetchLocations, loading: loadingLocationsData, data: dataLocations } = useGet({
-    url: `${apiUrl}/customer/address/lists1`,
+    url: `${apiUrl}/customer/address/lists1?&locale=${selectedLanguage}`,
   });
   const [branches, setBranches] = useState([]);
   const [callCenterPhone, setCallCenterPhone] = useState('');
-  
+
   useEffect(() => {
     refetchLocations();
-  }, [refetchLocations]);
+  }, [refetchLocations,selectedLanguage]);
 
   useEffect(() => {
     if (dataLocations && dataLocations.branches && dataLocations.call_center_phone) {
@@ -35,7 +37,7 @@ const Branch = () => {
 
   const formatWorkingHours = (hours) => {
     if (!hours) return t('NotAvailable');
-   
+
     try {
       const hoursObj = typeof hours === 'string' ? JSON.parse(hours) : hours;
       return Object.entries(hoursObj)
@@ -49,17 +51,17 @@ const Branch = () => {
   // Phone number formatter
   const formatPhoneNumber = (phone) => {
     if (!phone) return '';
-    
+
     // Remove non-digits
     const cleaned = phone.replace(/\D/g, '');
-    
+
     // Format based on length (adjust for your country's format)
     if (cleaned.length === 10) {
       return `(${cleaned.slice(0, 3)}) ${cleaned.slice(3, 6)}-${cleaned.slice(6)}`;
     } else if (cleaned.length === 11 && cleaned.startsWith('1')) {
       return `(${cleaned.slice(1, 4)}) ${cleaned.slice(4, 7)}-${cleaned.slice(7)}`;
     }
-    
+
     return phone;
   };
 
@@ -121,18 +123,18 @@ const Branch = () => {
                         {branch.address || t('AddressNotAvailable')}
                       </p>
                     </div>
-                   
+
                     {/* Phone */}
                     <div className="flex items-center gap-1.5">
                       <FaPhoneAlt className="flex-shrink-0 text-sm text-green-500" />
                       <span className="font-medium truncate">
-                        {branch.phone_status === 1 
-                          ? formatPhoneNumber(branch.phone) 
+                        {branch.phone_status === 1
+                          ? formatPhoneNumber(branch.phone)
                           : formatPhoneNumber(callCenterPhone)
                         }
                       </span>
                     </div>
-                   
+
                     {/* Working Hours */}
                     {branch.working_hours && (
                       <div className="flex items-start gap-1.5">
@@ -156,7 +158,7 @@ const Branch = () => {
                     <FaUtensils className="text-xs" />
                     <span className="whitespace-nowrap">{t('ViewProducts')}</span>
                   </Link>
-                 
+
                   {/* Directions Button */}
                   {branch.map && (
                     <a
@@ -170,7 +172,7 @@ const Branch = () => {
                       <span className="whitespace-nowrap">{t('Directions')}</span>
                     </a>
                   )}
-                  
+
                   {/* Overflow Menu Button (if no map) */}
                   {!branch.map && (
                     <button className="flex items-center justify-center flex-shrink-0 w-6 h-6 ml-1 text-gray-400 transition-colors duration-200 rounded-full hover:text-gray-600 hover:bg-gray-100">
