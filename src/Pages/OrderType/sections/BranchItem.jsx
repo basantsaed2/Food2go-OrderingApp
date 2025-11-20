@@ -29,7 +29,7 @@ const BranchItem = React.memo(({ branch, isSelected, onClick }) => {
         <span className="sm:text-lg xl:text-xl font-TextFontRegular">
           {branch.name.charAt(0).toUpperCase() + (branch.name.slice(1) || '')}
         </span>
-        <span className="sm:text-xs xl:text-lg font-TextFontRegular text-gray-600 group-hover:text-white">
+        <span className="sm:text-xs xl:text-lg font-TextFontRegula">
           {branch.address.charAt(0).toUpperCase() + (branch.address.slice(1) || '')}
         </span>
       </div>

@@ -11,11 +11,11 @@ const Banners = () => {
   const { refetch: refetchBannerData, loading: loadingBannerData, data: dataBanner } = useGet({
     url: `${apiUrl}/customer/home/slider`,
   });
-  
+
   // Get current language from Redux store
   const selectedLanguage = useSelector(state => state.language?.selected || 'en');
   const isRTL = selectedLanguage === 'ar';
-  
+
   const [bannerData, setBannerData] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
@@ -68,7 +68,7 @@ const Banners = () => {
   if (loadingBannerData) {
     return (
       <div className="flex flex-col items-center justify-center w-full max-w-full py-16">
-          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-mainColor mx-auto mb-4"></div>
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-mainColor mx-auto mb-4"></div>
       </div>
     );
   }
@@ -78,13 +78,13 @@ const Banners = () => {
   }
 
   return (
-    <section 
+    <section
       className="relative w-full md:p-6 overflow-hidden"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Main Container */}
       <div className="relative w-full">
-        
+
         {/* Banner Carousel */}
         <div className="relative group">
           <Splide
@@ -106,10 +106,10 @@ const Banners = () => {
               trimSpace: false,
               direction: isRTL ? 'rtl' : 'ltr', // RTL support for Splide
               breakpoints: {
-                1024: { 
+                1024: {
                   gap: '0.5rem',
                 },
-                768: { 
+                768: {
                   gap: '0.25rem',
                 },
               },
@@ -123,24 +123,35 @@ const Banners = () => {
               <SplideSlide key={index} className="relative">
                 <div className="relative overflow-hidden md:rounded-xl shadow-2xl bg-gradient-to-br from-gray-900 to-gray-800">
                   {/* Image Container */}
-                  <div className="relative h-96 md:h-96 lg:h-screen overflow-hidden">
+                  <div className="
+  relative 
+  w-full 
+  overflow-hidden 
+  md:rounded-xl 
+  shadow-2xl
+  /* الارتفاع المتغير الذكي */
+  h-[50vh]          /* موبايل */
+  sm:h-[55vh] 
+  md:h-[60vh] 
+  lg:h-[75vh] 
+  xl:h-[80vh] 
+  2xl:h-[85vh]
+  max-h-screen      /* أمان إضافي */
+">
                     <img
                       src={banner.image_link}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                       alt={banner.title || `Banner ${index + 1}`}
+                      className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-1000 group-hover:scale-105"
                       loading={index === 0 ? 'eager' : 'lazy'}
-                      onError={(e) => {
-                        e.target.style.objectFit = 'contain';
-                        e.target.style.backgroundColor = '#f3f4f6';
-                      }}
+                      fetchPriority={index === 0 ? 'high' : 'auto'}
+                      decoding="async"
                     />
-                    
+
                     {/* Gradient Overlay - Adjusted for RTL */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80" />
-                    <div 
-                      className={`absolute inset-0 bg-gradient-to-r from-black/30 via-transparent to-transparent ${
-                        isRTL ? 'transform rotate-180' : ''
-                      }`}
+                    <div
+                      className={`absolute inset-0 bg-gradient-to-r from-black/30 via-transparent to-transparent ${isRTL ? 'transform rotate-180' : ''
+                        }`}
                     />
                   </div>
 
@@ -149,31 +160,27 @@ const Banners = () => {
                     <div className={`absolute bottom-0 ${isRTL ? 'right-0' : 'left-0'} right-0 left-0 p-6 md:p-8 lg:p-12`}>
                       <div className={`max-w-2xl ${isRTL ? 'ml-auto' : 'mr-auto'}`}>
                         {banner.title && (
-                          <h2 className={`text-2xl md:text-4xl lg:text-5xl font-bold text-white mb-2 md:mb-4 leading-tight ${
-                            isRTL ? 'text-right' : 'text-left'
-                          }`}>
+                          <h2 className={`text-2xl md:text-4xl lg:text-5xl font-bold text-white mb-2 md:mb-4 leading-tight ${isRTL ? 'text-right' : 'text-left'
+                            }`}>
                             {banner.title}
                           </h2>
                         )}
                         {banner.description && (
-                          <p className={`text-gray-200 text-sm md:text-lg lg:text-xl leading-relaxed mb-4 md:mb-6 ${
-                            isRTL ? 'text-right' : 'text-left'
-                          }`}>
+                          <p className={`text-gray-200 text-sm md:text-lg lg:text-xl leading-relaxed mb-4 md:mb-6 ${isRTL ? 'text-right' : 'text-left'
+                            }`}>
                             {banner.description}
                           </p>
                         )}
                         {banner.cta_text && (
-                          <button 
-                            className={`inline-flex items-center px-6 py-3 text-white font-semibold rounded-full transition-all duration-300 hover:scale-105 active:scale-95 ${
-                              isRTL ? 'flex-row-reverse' : ''
-                            }`}
+                          <button
+                            className={`inline-flex items-center px-6 py-3 text-white font-semibold rounded-full transition-all duration-300 hover:scale-105 active:scale-95 ${isRTL ? 'flex-row-reverse' : ''
+                              }`}
                             style={{ backgroundColor: 'var(--color-main, #d7030b)' }}
                           >
                             {banner.cta_text}
-                            <ChevronRight 
-                              className={`h-5 w-5 transform ${isRTL ? 'rotate-180' : ''} ${
-                                isRTL ? 'mr-2' : 'ml-2'
-                              }`} 
+                            <ChevronRight
+                              className={`h-5 w-5 transform ${isRTL ? 'rotate-180' : ''} ${isRTL ? 'mr-2' : 'ml-2'
+                                }`}
                             />
                           </button>
                         )}
@@ -203,7 +210,7 @@ const Banners = () => {
               >
                 <ChevronLeft className={`h-6 w-6 transform ${isRTL ? 'rotate-180' : ''}`} />
               </button>
-              
+
               {/* Next Button - Position changes based on RTL */}
               <button
                 onClick={goNext}
@@ -238,12 +245,11 @@ const Banners = () => {
               <button
                 key={index}
                 onClick={() => goToSlide(index)}
-                className={`transition-all duration-300 rounded-full ${
-                  index === currentSlide
+                className={`transition-all duration-300 rounded-full ${index === currentSlide
                     ? 'w-8 h-3 opacity-100'
                     : 'w-3 h-3 opacity-60 hover:opacity-80'
-                }`}
-                style={{ 
+                  }`}
+                style={{
                   backgroundColor: index === currentSlide ? 'var(--color-main, #d7030b)' : '#d1d5db'
                 }}
                 aria-label={`Go to slide ${index + 1}`}
