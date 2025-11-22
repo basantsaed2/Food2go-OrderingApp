@@ -18,7 +18,7 @@ const ProductDetails = ({ product, onClose, language }) => {
   const { changeState, loadingChange } = useChangeState();
   const auth = useAuth();
   const token = useSelector((state) => state?.user?.data?.token || '');
-  
+
   // Get favorite status from Redux
   const favorites = useSelector((state) => state.favorites.items);
   const isFavorite = favorites[product.id] ?? product.favourite;
@@ -72,25 +72,39 @@ const ProductDetails = ({ product, onClose, language }) => {
   useEffect(() => {
     if (productDetails && !loadingProductDetails) {
       setDisplayProduct(productDetails.product || product);
-      
+
       // Update Redux state with the latest favorite status from API
       if (productDetails.product?.favourite !== undefined) {
-        dispatch(setFavorite({ 
-          productId: product.id, 
-          isFavorite: productDetails.product.favourite 
+        dispatch(setFavorite({
+          productId: product.id,
+          isFavorite: productDetails.product.favourite
         }));
       }
-      
+
       const initialAddons = {};
-      productDetails.addons?.forEach((addon) => {
+      // productDetails.addons?.forEach((addon) => {
+      //   initialAddons[addon.id] = {
+      //     checked: false,
+      //     quantity: addon.quantity_add === 1 ? 1 : 1,
+      //   };
+      // });
+      // FIX: Convert addons object to array before using forEach
+      const addonsArray = Object.values(productDetails.addons || {});
+      addonsArray.forEach((addon) => {
         initialAddons[addon.id] = {
           checked: false,
           quantity: addon.quantity_add === 1 ? 1 : 1,
         };
       });
       setSelectedAddons(initialAddons);
+
       const initialExtras = {};
-      productDetails.allExtras?.forEach((extra) => {
+      // productDetails.allExtras?.forEach((extra) => {
+      //   initialExtras[extra.id] = 0;
+      // });
+      // Apply the same fix to allExtras if needed
+      const extrasArray = Object.values(productDetails.allExtras || {});
+      extrasArray.forEach((extra) => {
         initialExtras[extra.id] = 0;
       });
       setSelectedExtras(initialExtras);
@@ -168,23 +182,22 @@ const ProductDetails = ({ product, onClose, language }) => {
       auth.toastError(t('pleaseLogin'));
       return;
     }
-    
+
     const newFavoriteState = !isFavorite;
     const url = `${apiUrl}/customer/home/favourite/${product.id}`;
-    
+
     const success = await changeState(
       url,
       newFavoriteState ? `${product.name} ${t('addedToFavorites')}` : `${product.name} ${t('removedFromFavorites')}`,
       { favourite: newFavoriteState ? 1 : 0 }
     );
-    
     if (success) {
       // Update Redux state
-      dispatch(toggleFavorite({ 
-        productId: product.id, 
-        isFavorite: newFavoriteState 
+      dispatch(toggleFavorite({
+        productId: product.id,
+        isFavorite: newFavoriteState
       }));
-      
+
       // Update local display product
       setDisplayProduct(prev => ({
         ...prev,
@@ -215,54 +228,54 @@ const ProductDetails = ({ product, onClose, language }) => {
     return productDetails.allExtras.filter((extra) => isExtraAvailable(extra));
   };
 
-const calculateTotalPrice = () => {
-  if (!productDetails) return (product.price_after_discount || product.price) * quantity;
+  const calculateTotalPrice = () => {
+    if (!productDetails) return (product.price_after_discount || product.price) * quantity;
 
-  let total = parseFloat(productDetails.price_after_discount || productDetails.price);
+    let total = parseFloat(productDetails.price_after_discount || productDetails.price);
 
-  // Add variation prices (multiplied by quantity - KEEP AS IS)
-  Object.values(selectedVariations).forEach((optionIds) => {
-    if (Array.isArray(optionIds)) {
-      optionIds.forEach((optionId) => {
+    // Add variation prices (multiplied by quantity - KEEP AS IS)
+    Object.values(selectedVariations).forEach((optionIds) => {
+      if (Array.isArray(optionIds)) {
+        optionIds.forEach((optionId) => {
+          const option = productDetails.variations
+            .flatMap((v) => v.options)
+            .find((o) => o.id === optionId);
+          if (option) total += parseFloat(option.price);
+        });
+      } else {
         const option = productDetails.variations
           .flatMap((v) => v.options)
-          .find((o) => o.id === optionId);
+          .find((o) => o.id === optionIds);
         if (option) total += parseFloat(option.price);
-      });
-    } else {
-      const option = productDetails.variations
-        .flatMap((v) => v.options)
-        .find((o) => o.id === optionIds);
-      if (option) total += parseFloat(option.price);
-    }
-  });
-
-  // Multiply base product + variations by quantity
-  total = total * quantity;
-
-  // Add addon prices (NOT multiplied by product quantity - FIX ONLY THIS)
-  Object.entries(selectedAddons).forEach(([addonId, addonData]) => {
-    if (addonData.checked) {
-      const addon = productDetails.addons?.find((a) => a.id === parseInt(addonId));
-      if (addon) {
-        const addonQty = addonData.quantity || 1;
-        // Addon price is multiplied only by addon quantity, not product quantity
-        total += parseFloat(addon.price) * addonQty;
       }
-    }
-  });
+    });
 
-  // Add extra prices (KEEP multiplied by product quantity - NO CHANGE)
-  Object.entries(selectedExtras).forEach(([extraId, extraQty]) => {
-    const extra = productDetails.allExtras?.find((e) => e.id === parseInt(extraId));
-    if (extra && extraQty > 0 && isExtraAvailable(extra)) {
-      // Extra price is multiplied by both extra quantity AND product quantity (KEEP AS IS)
-      total += parseFloat(extra.price_after_discount || extra.price) * extraQty * quantity;
-    }
-  });
+    // Multiply base product + variations by quantity
+    total = total * quantity;
 
-  return total;
-};
+    // Add addon prices (NOT multiplied by product quantity - FIX ONLY THIS)
+    Object.entries(selectedAddons).forEach(([addonId, addonData]) => {
+      if (addonData.checked) {
+        const addon = productDetails.addons?.find((a) => a.id === parseInt(addonId));
+        if (addon) {
+          const addonQty = addonData.quantity || 1;
+          // Addon price is multiplied only by addon quantity, not product quantity
+          total += parseFloat(addon.price) * addonQty;
+        }
+      }
+    });
+
+    // Add extra prices (KEEP multiplied by product quantity - NO CHANGE)
+    Object.entries(selectedExtras).forEach(([extraId, extraQty]) => {
+      const extra = productDetails.allExtras?.find((e) => e.id === parseInt(extraId));
+      if (extra && extraQty > 0 && isExtraAvailable(extra)) {
+        // Extra price is multiplied by both extra quantity AND product quantity (KEEP AS IS)
+        total += parseFloat(extra.price_after_discount || extra.price) * extraQty * quantity;
+      }
+    });
+
+    return total;
+  };
 
   const validateVariationSelection = (variation) => {
     if (!variation.required) return true;
