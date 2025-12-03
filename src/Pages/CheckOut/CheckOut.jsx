@@ -349,7 +349,7 @@ const CheckOut = () => {
             return;
         }
 
-        if (selectedPaymentMethod.type === "manuel" && !receiptFile) {
+        if (selectedPaymentMethod.type === "manuel" && selectedPaymentMethod.name !== "cash" && !receiptFile) {
             auth.toastError(t('pleaseUploadReceiptForManualPayment'));
             return;
         }
@@ -554,7 +554,7 @@ const CheckOut = () => {
                                     )}
 
                                     {/* Manual payment → receipt upload right here and REQUIRED */}
-                                    {selectedPaymentMethod.type === "manuel" && (
+                                    {(selectedPaymentMethod.type === "manuel" && selectedPaymentMethod.name !== "cash") && (
                                         <div className="p-4 border-2 border-dashed border-gray-300 rounded-lg">
                                             <label className="block mb-2 text-sm font-semibold text-red-600">
                                                 {t('uploadReceipt')} <span className="text-red-500">*</span>
@@ -577,7 +577,7 @@ const CheckOut = () => {
                                                 onChange={handleReceiptChange}
                                                 className="hidden"
                                                 accept="image/*,.pdf"
-                                                required={selectedPaymentMethod.type === "manuel"}
+                                                required={selectedPaymentMethod.type === "manuel" && selectedPaymentMethod.name !== "cash"}
                                             />
                                             <p className="mt-2 text-xs text-gray-500">
                                                 {t('Supported formats')}: JPG, PNG, PDF
