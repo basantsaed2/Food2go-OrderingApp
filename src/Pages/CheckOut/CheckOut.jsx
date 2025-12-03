@@ -23,12 +23,12 @@ import {
 import { useAuth } from "../../Context/Auth";
 
 const CheckOut = () => {
-    const { t } = useTranslation();
     const apiUrl = import.meta.env.VITE_API_BASE_URL;
     const navigate = useNavigate();
     const cart = useSelector(state => state.cart);
     const taxSysType = useSelector(state => state.taxType?.data || 'included');
     const auth = useAuth();
+    const { t, i18n } = useTranslation();
 
     // Get IDs from orderType slice with localStorage fallback
     const getOrderTypeFromStorage = () => {
@@ -349,6 +349,11 @@ const CheckOut = () => {
             return;
         }
 
+        if (selectedPaymentMethod.type === "manuel" && !receiptFile) {
+            auth.toastError(t('pleaseUploadReceiptForManualPayment'));
+            return;
+        }
+
         // Validate that required location is selected
         if (orderType === 'delivery' && !selectedAddressId) {
             auth.toastError('Please select a delivery address');
@@ -407,7 +412,7 @@ const CheckOut = () => {
 
     return (
         <div className="min-h-screen py-8 bg-gradient-to-br from-gray-50 to-blue-50">
-            <div className="px-4 mx-auto max-w-8xl sm:px-6 lg:px-8">
+            <div className="px-4 mx-auto max-w-8xl xl:px-8">
                 {/* Header */}
                 <div className="mb-6 text-center">
                     <h1 className="mb-4 text-4xl font-bold text-gray-900">
@@ -434,7 +439,7 @@ const CheckOut = () => {
                     </div>
                 ) : null}
 
-                <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+                <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
                     {/* Left Column - Order Details */}
                     <div className="space-y-6 lg:col-span-2">
                         {/* Order Summary Card */}
@@ -536,21 +541,58 @@ const CheckOut = () => {
 
                             <PaymentMethodSelect />
 
-                            {/* {selectedPaymentMethod && (
-                                <div className="flex items-center p-3 mt-3 space-x-3 rounded-lg bg-green-50">
-                                    <img
-                                        src={selectedPaymentMethod.logo_link}
-                                        alt={selectedPaymentMethod.name}
-                                        className="object-contain w-8 h-8"
-                                    />
-                                    <div>
-                                        <p className="font-semibold text-gray-900">{selectedPaymentMethod.name}</p>
-                                        {selectedPaymentMethod.description && (
-                                            <p className="text-sm text-gray-600">{selectedPaymentMethod.description}</p>
-                                        )}
-                                    </div>
+                            {/* Selected method details + description + receipt (for manual only) */}
+                            {selectedPaymentMethod && (
+                                <div className="mt-4 space-y-4">
+                                    {/* Description - shown first */}
+                                    {selectedPaymentMethod.description && (
+                                        <div className="p-4 rounded-lg bg-gray-50">
+                                            <p className="text-sm text-gray-700">
+                                                {selectedPaymentMethod.description}
+                                            </p>
+                                        </div>
+                                    )}
+
+                                    {/* Manual payment → receipt upload right here and REQUIRED */}
+                                    {selectedPaymentMethod.type === "manuel" && (
+                                        <div className="p-4 border-2 border-dashed border-gray-300 rounded-lg">
+                                            <label className="block mb-2 text-sm font-semibold text-red-600">
+                                                {t('uploadReceipt')} <span className="text-red-500">*</span>
+                                            </label>
+                                            <div className="flex items-center space-x-4">
+                                                <button
+                                                    type="button"
+                                                    onClick={handleReceiptClick}
+                                                    className="px-4 py-2 text-sm font-medium transition-colors border border-gray-300 rounded-lg hover:bg-gray-50"
+                                                >
+                                                    {receiptFileName ? t('changeFile') : t('chooseFile')}
+                                                </button>
+                                                <span className="text-sm text-gray-600">
+                                                    {receiptFileName || t('noFileChosen')}
+                                                </span>
+                                            </div>
+                                            <input
+                                                type="file"
+                                                ref={receiptRef}
+                                                onChange={handleReceiptChange}
+                                                className="hidden"
+                                                accept="image/*,.pdf"
+                                                required={selectedPaymentMethod.type === "manuel"}
+                                            />
+                                            <p className="mt-2 text-xs text-gray-500">
+                                                {t('Supported formats')}: JPG, PNG, PDF
+                                            </p>
+
+                                            {/* Visual feedback if no receipt */}
+                                            {/* {!receiptFileName && selectedPaymentMethod.type === "manuel" && (
+                                                <p className="mt-2 text-xs text-red-600">
+                                                    {t('receiptIsRequiredForManualPayment')}
+                                                </p>
+                                            )} */}
+                                        </div>
+                                    )}
                                 </div>
-                            )} */}
+                            )}
                         </div>
 
                         {/* Additional Notes & Receipt */}
@@ -573,41 +615,13 @@ const CheckOut = () => {
                                         rows={3}
                                     />
                                 </div>
-
-                                <div>
-                                    <label className="block mb-2 text-sm font-medium text-gray-700">
-                                        {t('uploadReceipt')} {t('Optional')}
-                                    </label>
-                                    <div className="flex items-center space-x-4">
-                                        <button
-                                            type="button"
-                                            onClick={handleReceiptClick}
-                                            className="px-4 py-2 transition-colors border border-gray-300 rounded-lg hover:bg-gray-50"
-                                        >
-                                            {t('chooseFile')}
-                                        </button>
-                                        <span className="text-sm text-gray-600">
-                                            {receiptFileName || t('noFileChosen')}
-                                        </span>
-                                    </div>
-                                    <input
-                                        type="file"
-                                        ref={receiptRef}
-                                        onChange={handleReceiptChange}
-                                        className="hidden"
-                                        accept="image/*,.pdf"
-                                    />
-                                    <p className="mt-1 text-xs text-gray-500">
-                                        Supported formats: JPG, PNG, PDF
-                                    </p>
-                                </div>
                             </div>
                         </div>
                     </div>
 
                     {/* Right Column - Order Summary & Checkout */}
                     <div className="lg:col-span-1">
-                        <div className="sticky p-6 bg-white shadow-lg rounded-2xl top-6">
+                        <div className="sticky p-4 md:p-6 bg-white shadow-lg rounded-2xl top-6">
                             <h2 className="mb-6 text-xl font-bold text-gray-900">
                                 {t('orderTotal')}
                             </h2>
@@ -696,37 +710,50 @@ const CheckOut = () => {
 
             {/* Processing Order Modal */}
             {showProcessingModal && (
-                <div className="fixed inset-0 z-50 overflow-y-auto">
+                <div className="fixed inset-0 z-50 overflow-y-auto" dir={i18n.language === 'ar' ? 'rtl' : 'ltr'}>
                     <div className="flex items-end justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-                        <div className="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" onClick={handleCancelOrder} />
+                        {/* Backdrop */}
+                        <div
+                            className="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"
+                            onClick={handleCancelOrder}
+                        />
 
-                        <div className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
+                        {/* Modal Panel */}
+                        <div className={`inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl
+        ${i18n.language === 'ar' ? 'text-right' : 'text-left'}`}
+                        >
                             <div className="flex items-center">
                                 <div className="flex-shrink-0">
                                     <AlertCircle className="w-8 h-8 text-yellow-500" />
                                 </div>
-                                <div className="ml-4">
+
+                                {/* Title & Message */}
+                                <div className={i18n.language === 'ar' ? 'mr-4' : 'ml-4'}>
                                     <h3 className="text-lg font-medium text-gray-900">
                                         {t("OrderAlreadyinProgress")}
                                     </h3>
                                     <div className="mt-2">
                                         <p className="text-sm text-gray-500">
-                                            {t("Youcurrently")}
+                                            {t("You currently have an order being processed. Are you sure you want to place another order?")}
                                         </p>
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="flex mt-6 space-x-3">
+                            {/* Buttons - reverse order and spacing in Arabic */}
+                            <div className={`flex mt-6 ${i18n.language === 'ar' ? 'space-x-reverse space-x-3' : 'space-x-3'}`}>
+                                {/* Confirm Button */}
                                 <button
                                     onClick={handleConfirmOrder}
-                                    className="flex-1 px-4 py-2 text-sm font-medium text-white border border-transparent rounded-md bg-mainColor hover:bg-white hover:text-mainColor focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                                    className="flex-1 px-4 py-2 text-sm font-medium text-white border border-transparent rounded-md bg-mainColor hover:bg-white hover:text-mainColor focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
                                 >
                                     {t("PlaceNewOrder")}
                                 </button>
+
+                                {/* Cancel Button */}
                                 <button
                                     onClick={handleCancelOrder}
-                                    className="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                                    className="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors"
                                 >
                                     {t("NoCancel")}
                                 </button>

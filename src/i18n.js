@@ -243,8 +243,9 @@ const resources = {
 
       OrderAlreadyinProgress: "Order Already in Progress",
       Youcurrently: "You currently",
-      PlaceNewOrder: "Place New Order",
-      NoCancel: "No Cancel",
+      "You currently have an order being processed. Are you sure you want to place another order?": "You currently have an order being processed. Are you sure you want to place another order?",
+      PlaceNewOrder: "Yes, Place New Order",
+      NoCancel: "No,Cancel",
 
       MyFavorites: "My Favorites",
       Nofavorites: "No favorites",
@@ -289,6 +290,8 @@ const resources = {
       Apt: "Apt",
       Floor: "Floor",
       Bldg: "Bldg",
+
+      pleaseUploadReceiptForManualPayment: "Please upload the payment receipt to complete your order"
 
     }
   },
@@ -336,8 +339,9 @@ const resources = {
       Loadingyourorders: "جارٍ تحميل طلباتك",
       OrderAlreadyinProgress: "الطلب قيد التنفيذ بالفعل",
       Youcurrently: "أنت حاليًا",
-      PlaceNewOrder: "قم بإنشاء طلب جديد",
-      NoCancel: "لا يمكن الإلغاء",
+      "You currently have an order being processed. Are you sure you want to place another order?": "لديك حالياً طلب قيد التنفيذ. هل أنت متأكد أنك تريد تقديم طلب جديد؟",
+      PlaceNewOrder: "نعم، قم بإنشاء طلب جديد",
+      NoCancel: "لا، إلغاء",
       Deliveryfee: "رسوم التوصيل",
       scheduleTime: "وقت الجدولة",
       paymentMethod: "طريقة الدفع",
@@ -588,6 +592,8 @@ const resources = {
 
       Item: "عنصر",
       Items: "عناصر",
+
+      pleaseUploadReceiptForManualPayment: "من فضلك قم برفع إيصال الدفع لإكمال الطلب"
     }
   }
 };
