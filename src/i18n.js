@@ -291,6 +291,10 @@ const resources = {
       Floor: "Floor",
       Bldg: "Bldg",
 
+      paymentFee: "Payment Fee",
+      percentageFee: "{{percentage}}% fee",
+      paymentMethodWithFee: "{{methodName}} ({{percentage}}% fee)",
+
       pleaseUploadReceiptForManualPayment: "Please upload the payment receipt to complete your order"
 
     }
@@ -592,6 +596,10 @@ const resources = {
 
       Item: "عنصر",
       Items: "عناصر",
+
+      paymentFee: "رسوم الدفع",
+      percentageFee: "رسوم {{percentage}}٪",
+      paymentMethodWithFee: "{{methodName}} (رسوم {{percentage}}٪)",
 
       pleaseUploadReceiptForManualPayment: "من فضلك قم برفع إيصال الدفع لإكمال الطلب"
     }
