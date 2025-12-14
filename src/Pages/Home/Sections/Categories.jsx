@@ -12,7 +12,7 @@ const Categories = () => {
   const selectedLanguage = useSelector((state) => state.language?.selected ?? 'en');
   const { t } = useTranslation();
   const isRTL = selectedLanguage === 'ar';
-  
+
   const [categoriesData, setCategoriesData] = useState(null);
   const dispatch = useDispatch();
   const scrollContainerRef = useRef(null);
@@ -35,7 +35,7 @@ const Categories = () => {
   // Helper function to build query string for category links
   const getCategoryQueryString = () => {
     const searchParams = new URLSearchParams();
-    
+
     if (orderType === 'delivery' && selectedAddressId) {
       searchParams.set('order_type', 'delivery');
       searchParams.set('address_id', selectedAddressId);
@@ -43,7 +43,7 @@ const Categories = () => {
       searchParams.set('order_type', 'take_away');
       searchParams.set('branch_id', selectedBranchId);
     }
-    
+
     return searchParams.toString();
   };
 
@@ -90,7 +90,7 @@ const Categories = () => {
           scrollContainer.scrollBy({ left: 300, behavior: 'smooth' });
         }
       }
-    }, 3000);
+    }, 6000);
 
     return () => {
       if (autoScrollRef.current) {
@@ -122,7 +122,7 @@ const Categories = () => {
   if (loadingCategories) {
     return (
       <div className="flex justify-center items-center py-12">
-          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-mainColor mx-auto mb-4"></div>
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-mainColor mx-auto mb-4"></div>
       </div>
     );
   }
@@ -136,7 +136,7 @@ const Categories = () => {
   }
 
   return (
-    <section 
+    <section
       className="w-full py-4 px-4 relative"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
@@ -161,6 +161,13 @@ const Categories = () => {
                   <ChevronLeft className={`h-5 w-5 text-gray-700 transform ${isRTL ? 'rotate-180' : ''}`} />
                 </button>
                 <button
+                  onClick={toggleAutoScroll}
+                  className="p-2 rounded-full bg-white border border-gray-200 shadow-sm hover:bg-gray-50 transition-colors"
+                  aria-label={isRTL ? t('scrollLeft') : t('scrollRight')}
+                >
+                  {isPlaying ? <Pause className="h-5 w-5 text-gray-700" /> : <Play className="h-5 w-5 text-gray-700" />}
+                </button>
+                <button
                   onClick={scrollRight}
                   className="p-2 rounded-full bg-white border border-gray-200 shadow-sm hover:bg-gray-50 transition-colors"
                   aria-label={isRTL ? t('scrollLeft') : t('scrollRight')}
@@ -177,8 +184,8 @@ const Categories = () => {
           <div
             ref={scrollContainerRef}
             className="flex overflow-x-auto scrollbar-hide pb-6 -mx-4 px-4"
-            style={{ 
-              scrollbarWidth: 'none', 
+            style={{
+              scrollbarWidth: 'none',
               msOverflowStyle: 'none',
               [isRTL ? 'paddingRight' : 'paddingLeft']: '0',
               [isRTL ? 'paddingLeft' : 'paddingRight']: '0'
@@ -187,7 +194,7 @@ const Categories = () => {
             <div className={`flex ${isRTL ? 'space-x-reverse' : 'space-x-4'} space-x-4`}>
               {categoriesData.map((category) => {
                 const queryString = getCategoryQueryString();
-                const to = queryString 
+                const to = queryString
                   ? `/products/${category.id}?${queryString}`
                   : `/products/${category.id}`;
 

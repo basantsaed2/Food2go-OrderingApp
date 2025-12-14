@@ -12,7 +12,7 @@ const OffersProducts = () => {
   const selectedLanguage = useSelector((state) => state.language?.selected ?? 'en');
   const { t } = useTranslation();
   const isRTL = selectedLanguage === 'ar';
-  
+
   const dispatch = useDispatch();
   const scrollContainerRef = useRef(null);
   const autoScrollRef = useRef(null);
@@ -70,7 +70,7 @@ const OffersProducts = () => {
           scrollContainer.scrollBy({ left: 300, behavior: 'smooth' });
         }
       }
-    }, 3000);
+    }, 6000);
 
     return () => {
       if (autoScrollRef.current) {
@@ -115,7 +115,7 @@ const OffersProducts = () => {
   if (loadingOfferProducts) {
     return (
       <div className="w-full py-16 text-center bg-gray-50">
-          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-mainColor mx-auto mb-4"></div>
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-mainColor mx-auto mb-4"></div>
       </div>
     );
   }
@@ -125,7 +125,7 @@ const OffersProducts = () => {
   }
 
   return (
-    <section 
+    <section
       className="w-full py-4 px-4 relative"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
@@ -145,14 +145,21 @@ const OffersProducts = () => {
           {offerProductsData.length > 1 && (
             <div className={`flex items-center ${isRTL ? 'space-x-reverse' : 'space-x-3'} space-x-3`}>
               <div className={`flex ${isRTL ? 'space-x-reverse' : 'space-x-2'} space-x-2`}>
-                <button 
+                <button
                   onClick={scrollLeft}
                   className="p-2 rounded-full bg-white border border-gray-200 shadow-sm hover:bg-gray-50 transition-colors"
                   aria-label={isRTL ? t('scrollRight') : t('scrollLeft')}
                 >
                   <ChevronLeft className={`h-5 w-5 text-gray-700 transform ${isRTL ? 'rotate-180' : ''}`} />
                 </button>
-                <button 
+                <button
+                  onClick={toggleAutoScroll}
+                  className="p-2 rounded-full bg-white border border-gray-200 shadow-sm hover:bg-gray-50 transition-colors"
+                  aria-label={isRTL ? t('scrollLeft') : t('scrollRight')}
+                >
+                  {isPlaying ? <Pause className="h-5 w-5 text-gray-700" /> : <Play className="h-5 w-5 text-gray-700" />}
+                </button>
+                <button
                   onClick={scrollRight}
                   className="p-2 rounded-full bg-white border border-gray-200 shadow-sm hover:bg-gray-50 transition-colors"
                   aria-label={isRTL ? t('scrollLeft') : t('scrollRight')}
@@ -169,8 +176,8 @@ const OffersProducts = () => {
           <div
             ref={scrollContainerRef}
             className="flex overflow-x-auto scrollbar-hide pb-6 -mx-4 px-4"
-            style={{ 
-              scrollbarWidth: 'none', 
+            style={{
+              scrollbarWidth: 'none',
               msOverflowStyle: 'none',
               [isRTL ? 'paddingRight' : 'paddingLeft']: '0',
               [isRTL ? 'paddingLeft' : 'paddingRight']: '0'
