@@ -20,7 +20,7 @@ const LoginPage = () => {
     const mainData = useSelector(state => state.mainData?.data);
     const selectedLanguage = useSelector(state => state.language?.selected || 'en');
     const isRTL = selectedLanguage === 'en';
-    
+
     const customInput = ({ events, props }) => {
         const { invalid, ...inputProps } = props;
         const inputClass = invalid ? 'border-secoundColor' : 'border-gray-300';
@@ -40,7 +40,8 @@ const LoginPage = () => {
     // State management
     const [verificationMethod, setVerificationMethod] = useState(null);
     const [loginStep, setLoginStep] = useState('login');
-    const [email, setEmail] = useState('');
+    // RENAMED state from 'email' to 'identifier' for combined login input
+    const [identifier, setIdentifier] = useState('');
     const [phone, setPhone] = useState('');
     const [password, setPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
@@ -128,16 +129,22 @@ const LoginPage = () => {
         return re.test(phone);
     };
 
-    // Handle login form submission
+    // Handle login form submission - MODIFIED TO SUPPORT EMAIL OR PHONE
     const handleLogin = async (e) => {
         e.preventDefault();
 
         setErrors({});
 
+        // 1. Determine if the input is an email or a phone number
+        const isEmailInput = validateEmail(identifier);
+        const isPhoneInput = validatePhone(identifier);
+
         // Validation
         const newErrors = {};
-        if (!validateEmail(email)) {
-            newErrors.email = t('validEmailRequired');
+
+        // Check if the input is EITHER a valid email OR a valid phone
+        if (!isEmailInput && !isPhoneInput) {
+            newErrors.identifier = t('validEmailOrPhoneRequired'); // Assumes translation key exists
         }
         if (!password) {
             newErrors.password = t('passwordRequired');
@@ -147,11 +154,19 @@ const LoginPage = () => {
             setErrors(newErrors);
             return;
         }
+
+        // 2. Prepare the final credentials payload
         const credentials = {
-            email,
-            password
+            password: password
         };
 
+        if (isEmailInput) {
+            credentials.email = identifier;
+        } else if (isPhoneInput) {
+            credentials.email = identifier;
+        }
+
+        // 3. Post the credentials
         postLogin(credentials);
     };
 
@@ -163,7 +178,7 @@ const LoginPage = () => {
 
         // Validation
         const newErrors = {};
-        if (verificationMethod === 'email' && !validateEmail(email)) {
+        if (verificationMethod === 'email' && !validateEmail(identifier)) { // Using identifier here for input
             newErrors.email = t('validEmailRequired');
         }
         if (verificationMethod === 'phone' && !validatePhone(phone)) {
@@ -175,8 +190,11 @@ const LoginPage = () => {
             return;
         }
 
+        // Update: Use the correct state based on the method
+        const valueToSend = verificationMethod === 'email' ? identifier : phone;
+
         const payload = {
-            [verificationMethod]: verificationMethod === 'email' ? email : phone
+            [verificationMethod]: valueToSend
         };
 
         postSendOtp(payload);
@@ -192,8 +210,12 @@ const LoginPage = () => {
             setErrors({ otp: t('valid5DigitCodeRequired') });
             return;
         }
+
+        // Use the identifier/phone value set in the previous step
+        const valueForOtpCheck = verificationMethod === 'email' ? identifier : phone;
+
         const payload = {
-            email: verificationMethod === 'email' ? email : phone,
+            email: valueForOtpCheck,
             code: otp
         };
 
@@ -222,8 +244,11 @@ const LoginPage = () => {
             setErrors(newErrors);
             return;
         }
+
+        const valueForReset = verificationMethod === 'email' ? identifier : phone;
+
         const payload = {
-            [verificationMethod]: verificationMethod === 'email' ? email : phone,
+            [verificationMethod]: valueForReset,
             password: newPassword,
             code: otp
         };
@@ -264,20 +289,20 @@ const LoginPage = () => {
 
                                 <form onSubmit={handleLogin} className="space-y-5">
                                     <div>
-                                        <label className={` mb-2 text-sm font-medium text-gray-700`}   >{t('emailAddress')}</label>
+                                        <label className={` mb-2 text-sm font-medium text-gray-700`} >{t('emailOrPhone')}</label>
                                         <div className="relative">
                                             <div className={`absolute inset-y-0 ${isRTL ? 'right-0 pr-3' : 'left-0 pl-3'} flex items-center pointer-events-none`}>
-                                                <FaEnvelope className="w-5 h-5 text-gray-400" />
+                                                <FaUser className="w-5 h-5 text-gray-400" />
                                             </div>
                                             <input
-                                                type="email"
-                                                value={email}
-                                                onChange={(e) => setEmail(e.target.value)}
-                                                placeholder={t('enterYourEmail')}
-                                                className={`w-full ${isRTL ? 'pr-10 pl-4' : 'pl-10 pr-4'} py-3 rounded-lg border ${errors.email ? 'border-secoundColor' : 'border-gray-300'} focus:ring-2 focus:ring-thirdColor focus:border-mainColor outline-none transition duration-200`}
+                                                type="text" // Changed type from email to text
+                                                value={identifier}
+                                                onChange={(e) => setIdentifier(e.target.value)} // Using new 'identifier' state
+                                                placeholder={t('enterYourEmailOrPhone')} // Updated placeholder
+                                                className={`w-full ${isRTL ? 'pr-10 pl-4' : 'pl-10 pr-4'} py-3 rounded-lg border ${errors.identifier ? 'border-secoundColor' : 'border-gray-300'} focus:ring-2 focus:ring-thirdColor focus:border-mainColor outline-none transition duration-200`}
                                             />
                                         </div>
-                                        {errors.email && <p className="mt-1 text-sm text-secoundColor">{errors.email}</p>}
+                                        {errors.identifier && <p className="mt-1 text-sm text-secoundColor">{errors.identifier}</p>}
                                     </div>
 
                                     <div>
@@ -371,18 +396,17 @@ const LoginPage = () => {
                             <form onSubmit={handleForgotPassword}>
                                 {verificationMethod === 'email' ? (
                                     <div className="mb-6">
-<label className={`w-full  flex mb-2 text-sm font-medium text-gray-700 ${isRTL  ? 'justify-start' : 'justify-end'}`}>
-<p>  {t('emailAddress')}
-</p>
-</label>
+                                        <label className={`w-full flex mb-2 text-sm font-medium text-gray-700 ${isRTL ? 'justify-start' : 'justify-end'}`}>
+                                            <p>{t('emailAddress')}</p>
+                                        </label>
                                         <div className="relative">
                                             <div className={`absolute inset-y-0 ${isRTL ? 'right-0 pr-3' : 'left-0 pl-3'} flex items-center pointer-events-none`}>
                                                 <FaEnvelope className="w-5 h-5 text-gray-400" />
                                             </div>
                                             <input
                                                 type="email"
-                                                value={email}
-                                                onChange={(e) => setEmail(e.target.value)}
+                                                value={identifier} // Using 'identifier' here too
+                                                onChange={(e) => setIdentifier(e.target.value)} // Using 'identifier' here too
                                                 placeholder={t('enterYourEmail')}
                                                 className={`w-full ${isRTL ? 'pr-10 pl-4' : 'pl-10 pr-4'} py-3 rounded-lg border ${errors.email ? 'border-secoundColor' : 'border-gray-300'} focus:ring-2 focus:ring-thirdColor focus:border-mainColor outline-none transition duration-200`}
                                             />
@@ -461,9 +485,8 @@ const LoginPage = () => {
 
                             <form onSubmit={handleVerifyOtp}>
                                 <div className="mb-6">
-                                    <div className={` flex ${isRTL?" justify-start":" justify-end"}`} >
-                                    <label className={` mb-2 text-sm font-medium text-gray-700  `}  >{t('verificationCode')}</label>
-
+                                    <div className={` flex ${isRTL ? " justify-start" : " justify-end"}`} >
+                                        <label className={` mb-2 text-sm font-medium text-gray-700  `}  >{t('verificationCode')}</label>
                                     </div>
                                     <div className="relative">
                                         <InputOtp
@@ -484,8 +507,8 @@ const LoginPage = () => {
                                 )}
 
                                 {successMessage && (
-                                    <div className={`p-3 mb-4 text-sm text-green-700 rounded-lg bg-green-50 flex ${isRTL?" justify-start":" justify-end"}`}>
-                                     <p> {successMessage}</p>   
+                                    <div className={`p-3 mb-4 text-sm text-green-700 rounded-lg bg-green-50 flex ${isRTL ? " justify-start" : " justify-end"}`}>
+                                        <p> {successMessage}</p>
                                     </div>
                                 )}
 
@@ -595,7 +618,7 @@ const LoginPage = () => {
                                                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                             </svg>
-                                            {t('resetting')}
+                                            {t('resettingPassword')}
                                         </>
                                     ) : t('resetPassword')}
                                 </button>
@@ -609,11 +632,7 @@ const LoginPage = () => {
         }
     };
 
-    return (
-        <div className="login-page">
-            {renderContent()}
-        </div>
-    );
+    return renderContent();
 };
 
 export default LoginPage;

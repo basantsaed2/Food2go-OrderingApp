@@ -86,7 +86,7 @@ const resources = {
       enterNewPassword: 'Please enter your new password',
       newPassword: 'New Password',
       confirmNewPassword: 'Confirm New Password',
-      resetting: 'Resetting...',
+      resettingPassword: 'Resetting Password...',
 
       // Validation messages
       validEmailRequired: 'Please enter a valid email address',
@@ -148,6 +148,9 @@ const resources = {
       removeFromFavorites: "remove From Favorites",
       addToFavorites: "add To Favorites",
       //signup
+      validEmailOrPhoneRequired: "Please enter a valid email or phone number",
+      emailOrPhone: "Email or Phone",
+      enterYourEmailOrPhone: "Enter your email or phone",
       PleaseEnterYourFirstName: "Please Enter Your First Name",
       PleaseEnterYourLastName: "Please Enter Your Last Name",
       PleaseEnterAValidPhoneNumber: "Please Enter A Valid Phone Number",
@@ -158,7 +161,7 @@ const resources = {
       VerificationCodeSentToYourEmail: "Verification Code Sent To Your Email",
       Processing: "Processing....",
       DeliciousMealsDeliveredToYourDoor: "Delicious Meals Delivered To Your Door",
-      SignUpTo: "SignUpTo",
+      SignUpTo: "SignUp To",
       CreateYour: "Create Your",
       Account: "Account",
       FirstName: "First Name",
@@ -439,6 +442,9 @@ const resources = {
       Processing: "جارٍ المعالجة...",
       VerificationCodeSentToYourEmail: "تم إرسال رمز التحقق إلى بريدك الإلكتروني",
       InvalidOTPCode: "رمز التحقق غير صالح",
+      validEmailOrPhoneRequired: "يرجى إدخال بريد إلكتروني أو رقم هاتف صالح",
+      emailOrPhone: "البريد الإلكتروني أو رقم الهاتف",
+      enterYourEmailOrPhone: "أدخل البريد الإلكتروني أو رقم الهاتف",
       PleaseEnterYourFirstName: "يرجى إدخال الاسم الأول",
       PleaseEnterYourLastName: "يرجى إدخال اسم العائلة",
       PleaseEnterAValidPhoneNumber: "يرجى إدخال رقم هاتف صالح",
@@ -537,7 +543,7 @@ const resources = {
       signUp: 'إنشاء حساب',
       backToLogin: 'العودة لتسجيل الدخول',
       resetPassword: 'إعادة تعيين كلمة المرور',
-      enterVerificationMethod: 'أدخل {{method}} الخاص بك لتلقي رمز التحقق',
+      enterVerificationMethod: ' الخاص بك لتلقي رمز التحقق {{method}} ادخل',
       phoneNumber: 'رقم الهاتف',
       enterYourPhone: 'أدخل رقم هاتفك',
       sending: 'جاري الإرسال...',
@@ -553,7 +559,7 @@ const resources = {
       enterNewPassword: 'يرجى إدخال كلمة المرور الجديدة',
       newPassword: 'كلمة المرور الجديدة',
       confirmNewPassword: 'تأكيد كلمة المرور الجديدة',
-      resetting: 'جاري إعادة التعيين...',
+      resettingPassword: 'جاري إعادة تعيين كلمة المرور...',
 
       // Validation messages
       validEmailRequired: 'يرجى إدخال بريد إلكتروني صحيح',
