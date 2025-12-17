@@ -20,17 +20,9 @@ const Categories = () => {
   const [isPlaying, setIsPlaying] = useState(true);
 
   // Get current order type and location from Redux
-  const orderType = useSelector((state) => state.orderType?.orderType);
-  const selectedAddressId = useSelector((state) => state.orderType?.selectedAddressId);
-  const selectedBranchId = useSelector((state) => state.orderType?.selectedBranchId);
-
-  const {
-    refetch: refetchCategories,
-    loading: loadingCategories,
-    data: dataCategories,
-  } = useGet({
-    url: `${apiUrl}/customer/home/categories?&locale=${selectedLanguage}`,
-  });
+  const orderType = useSelector((state) => state.orderType?.orderType) || localStorage.getItem('orderType');
+  const selectedAddressId = useSelector((state) => state.orderType?.selectedAddressId) || localStorage.getItem('selectedAddressId');
+  const selectedBranchId = useSelector((state) => state.orderType?.selectedBranchId) || localStorage.getItem('selectedBranchId');
 
   // Helper function to build query string for category links
   const getCategoryQueryString = () => {
@@ -46,6 +38,14 @@ const Categories = () => {
 
     return searchParams.toString();
   };
+
+  const {
+    refetch: refetchCategories,
+    loading: loadingCategories,
+    data: dataCategories,
+  } = useGet({
+    url: `${apiUrl}/customer/home/categories?locale=${selectedLanguage}&${getCategoryQueryString()}`,
+  });
 
   // Refetch products when language changes
   useEffect(() => {
