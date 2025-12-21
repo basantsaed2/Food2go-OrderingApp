@@ -15,6 +15,7 @@ export default {
         secoundColor: "var(--color-second)",
         thirdColor: "var(--color-third)",
         fourthColor: "#5E5E5E",
+        whiteColor: "#ffffff",
       },
       backgroundColor: {
         mainBgColor: "#E5E5E5",

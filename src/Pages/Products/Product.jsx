@@ -196,7 +196,7 @@ const Products = () => {
       setFilteredProducts([]);
       setSelectedSubCategory(null);
       setSearchQuery('');
-      
+
       refetchProducts();
     }
   }, [selectedCategory, refetchProducts]);
@@ -223,7 +223,7 @@ const Products = () => {
       setFilteredProducts([]);
       setSelectedSubCategory(null);
       setSearchQuery('');
-      
+
       setSelectedCategory(categoryId);
       const query = new URLSearchParams();
       if (effectiveOrderType === 'delivery' && effectiveAddressId) {
@@ -267,7 +267,7 @@ const Products = () => {
   }
 
   return (
-    <div 
+    <div
       className="w-full min-h-screen bg-gray-50"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
@@ -302,8 +302,8 @@ const Products = () => {
             <div
               ref={scrollContainerRef}
               className="flex overflow-x-auto scrollbar-hide pb-2"
-              style={{ 
-                scrollbarWidth: 'none', 
+              style={{
+                scrollbarWidth: 'none',
                 msOverflowStyle: 'none',
                 [isRTL ? 'paddingRight' : 'paddingLeft']: '0',
                 [isRTL ? 'paddingLeft' : 'paddingRight']: '0'
@@ -314,11 +314,10 @@ const Products = () => {
                   <button
                     key={category.id}
                     onClick={() => handleCategoryClick(category.id)}
-                    className={`flex-shrink-0 px-4 py-2 rounded-full text-lg font-medium transition-colors ${
-                      selectedCategory === category.id
-                        ? 'bg-mainColor text-white'
-                        : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
-                    }`}
+                    className={`flex-shrink-0 px-4 py-2 rounded-full text-lg font-medium transition-colors ${selectedCategory === category.id
+                      ? 'bg-mainColor text-whiteColor'
+                      : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                      }`}
                   >
                     {category.name}
                   </button>
@@ -362,11 +361,10 @@ const Products = () => {
               <div className={`flex ${isRTL ? 'space-x-reverse' : 'space-x-2'} space-x-2`}>
                 <button
                   onClick={() => setSelectedSubCategory(null)}
-                  className={`flex-shrink-0 px-3 py-1 rounded-full text-xs transition-colors ${
-                    selectedSubCategory === null
-                      ? 'bg-mainColor text-white'
-                      : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
-                  }`}
+                  className={`flex-shrink-0 px-3 py-1 rounded-full text-xs transition-colors ${selectedSubCategory === null
+                    ? 'bg-mainColor text-whiteColor'
+                    : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                    }`}
                 >
                   {t('all')}
                 </button>
@@ -374,11 +372,10 @@ const Products = () => {
                   <button
                     key={subCategory.id}
                     onClick={() => handleSubCategoryClick(subCategory.id)}
-                    className={`flex-shrink-0 px-3 py-1 rounded-full text-xs transition-colors ${
-                      selectedSubCategory === subCategory.id
-                        ? 'bg-mainColor text-white'
-                        : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
-                    }`}
+                    className={`flex-shrink-0 px-3 py-1 rounded-full text-xs transition-colors ${selectedSubCategory === subCategory.id
+                      ? 'bg-mainColor text-whiteColor'
+                      : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                      }`}
                   >
                     {subCategory.name}
                   </button>
@@ -400,19 +397,16 @@ const Products = () => {
                 value={searchQuery}
                 onChange={handleSearchChange}
                 placeholder={t('searchProductsPlaceholder')}
-                className={`w-full py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-1 focus:ring-mainColor focus:border-mainColor transition-all duration-300 bg-white shadow-sm placeholder-gray-400 text-gray-800 ${
-                  isRTL ? 'pr-10 pl-10' : 'pl-10 pr-10'
-                }`}
+                className={`w-full py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-1 focus:ring-mainColor focus:border-mainColor transition-all duration-300 bg-white shadow-sm placeholder-gray-400 text-gray-800 ${isRTL ? 'pr-10 pl-10' : 'pl-10 pr-10'
+                  }`}
               />
-              <Search className={`absolute top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 ${
-                isRTL ? 'right-3' : 'left-3'
-              }`} />
+              <Search className={`absolute top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 ${isRTL ? 'right-3' : 'left-3'
+                }`} />
               {searchQuery && (
                 <button
                   onClick={handleClearSearch}
-                  className={`absolute top-1/2 transform -translate-y-1/2 p-1 rounded-full hover:bg-gray-100 transition-colors ${
-                    isRTL ? 'left-3' : 'right-3'
-                  }`}
+                  className={`absolute top-1/2 transform -translate-y-1/2 p-1 rounded-full hover:bg-gray-100 transition-colors ${isRTL ? 'left-3' : 'right-3'
+                    }`}
                 >
                   <X className="h-5 w-5 text-gray-400" />
                 </button>
@@ -442,8 +436,8 @@ const Products = () => {
               {searchQuery
                 ? t('noProductsMatchSearch')
                 : selectedCategory && productsData.length === 0
-                ? t('noProductsInCategory')
-                : t('selectCategoryToViewProducts')
+                  ? t('noProductsInCategory')
+                  : t('selectCategoryToViewProducts')
               }
             </p>
             {selectedCategory && (!effectiveAddressId && !effectiveBranchId) && (

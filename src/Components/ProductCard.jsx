@@ -36,21 +36,21 @@ const ProductCard = ({
       auth.toastError(t('pleaseLogin'));
       return;
     }
-    
+
     const newFavoriteState = !isCardFavorite;
     const url = `${apiUrl}/customer/home/favourite/${product.id}`;
-    
+
     const success = await changeState(
       url,
       `${product.name} ${newFavoriteState ? t('addedToFavorites') : t('removedFromFavorites')}`,
       { favourite: newFavoriteState ? 1 : 0 }
     );
-    
+
     if (success) {
       // Update Redux state
-      dispatch(toggleFavorite({ 
-        productId: product.id, 
-        isFavorite: newFavoriteState 
+      dispatch(toggleFavorite({
+        productId: product.id,
+        isFavorite: newFavoriteState
       }));
 
       // Call parent callback if provided
@@ -140,7 +140,7 @@ const ProductCard = ({
             </div>
             <button
               onClick={handleProductClick}
-              className="p-1.5 bg-mainColor text-white rounded-full hover:bg-mainColor/90 transition-all duration-200 flex-shrink-0 shadow-sm hover:shadow-md transform hover:scale-105"
+              className="p-1.5 bg-mainColor text-whiteColor rounded-full hover:bg-mainColor/90 transition-all duration-200 flex-shrink-0 shadow-sm hover:shadow-md transform hover:scale-105"
               title={t('quickAddToCart')}
             >
               <Plus className="h-3.5 w-3.5" />

@@ -586,7 +586,7 @@ const ProductDetails = ({ product, onClose, language }) => {
                                 e.stopPropagation(); // 3. IMPORTANT: Stop click from triggering parent div (plus logic)
                                 handleVariationDecrement(variation.id, option.id);
                               }}
-                              className="p-1 border border-mainColor text-mainColor rounded-full hover:bg-mainColor hover:text-white transition-colors z-10"
+                              className="p-1 border border-mainColor text-mainColor rounded-full hover:bg-mainColor hover:text-whiteColor transition-colors z-10"
                             >
                               <Minus className="w-3 h-3" />
                             </button>
@@ -595,7 +595,7 @@ const ProductDetails = ({ product, onClose, language }) => {
                           {optionCount > 0 && <span className="font-bold text-sm min-w-[15px] text-center">{optionCount}</span>}
 
                           {/* Plus icon (visual only, since parent div handles the add) */}
-                          <div className={`p-1 rounded-full transition-colors ${isAtMax ? 'bg-gray-100 text-gray-400' : 'bg-mainColor text-white'
+                          <div className={`p-1 rounded-full transition-colors ${isAtMax ? 'bg-gray-100 text-gray-400' : 'bg-mainColor text-whiteColor'
                             }`}>
                             <Plus className="w-3 h-3" />
                           </div>
@@ -802,7 +802,7 @@ const ProductDetails = ({ product, onClose, language }) => {
             onClick={handleAddToCart}
             disabled={!canAddToCart()}
             className={`w-full py-3 rounded-lg font-semibold transition-colors ${canAddToCart()
-              ? 'bg-mainColor text-white hover:bg-mainColor/90'
+              ? 'bg-mainColor text-whiteColor hover:bg-mainColor/90'
               : 'bg-gray-300 text-gray-500 cursor-not-allowed'
               }`}
           >

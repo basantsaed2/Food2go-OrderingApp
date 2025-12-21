@@ -22,7 +22,7 @@ const Navbar = () => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
-    
+
     // SEPARATE STATES FOR DESKTOP AND MOBILE LANGUAGE DROPDOWNS
     const [isDesktopLanguageDropdownOpen, setIsDesktopLanguageDropdownOpen] = useState(false);
     const [isMobileLanguageDropdownOpen, setIsMobileLanguageDropdownOpen] = useState(false);
@@ -161,8 +161,8 @@ const Navbar = () => {
                         }}
                     />
                 </div>
-                <span className="text-xl font-bold text-white lg:text-2xl">
-                  {selectedLanguage === "en" ? mainData?.name : mainData?.ar_name || t('brandName')}
+                <span className="text-xl font-bold text-whiteColor lg:text-2xl">
+                    {selectedLanguage === "en" ? mainData?.name : mainData?.ar_name || t('brandName')}
                 </span>
             </div>
         );
@@ -247,7 +247,7 @@ const Navbar = () => {
                     className={`flex items-center ${isRTL ? 'space-x-reverse' : 'space-x-3'} space-x-3 w-full px-4 py-3 text-red-600 hover:bg-red-50 transition-colors group`}
                 >
                     <div className="flex items-center justify-center w-8 h-8 transition-colors rounded-lg group-hover:bg-opacity-20">
-                        <LogOut className="w-4 h-4" style={{ color: 'var(--color-main)' }}/>
+                        <LogOut className="w-4 h-4" style={{ color: 'var(--color-main)' }} />
                     </div>
                     <span className="flex-1 font-medium text-right">{t('logout')}</span>
                 </button>
@@ -309,8 +309,8 @@ const Navbar = () => {
             {pages.some(page => location.pathname === page) ? (
                 ''
             ) : (
-                <nav 
-                    className="relative z-40 shadow-lg" 
+                <nav
+                    className="relative z-40 shadow-lg"
                     style={{ backgroundColor: 'var(--color-main)' }}
                     dir={isRTL ? 'rtl' : 'ltr'}
                 >
@@ -327,7 +327,7 @@ const Navbar = () => {
                                     <Link
                                         key={index}
                                         to={item.path}
-                                        className={`text-white hover:text-gray-200 transition-all duration-200 font-medium flex items-center ${isRTL ? 'space-x-4' : 'space-x-reverse'} space-x-4 group relative`}
+                                        className={`text-whiteColor hover:text-gray-200 transition-all duration-200 font-medium flex items-center ${isRTL ? 'space-x-4' : 'space-x-reverse'} space-x-4 group relative`}
                                     >
                                         <item.icon className="w-5 h-5 transition-transform group-hover:scale-110" />
                                         <span className={isRTL ? 'mr-1' : 'ml-1'}>{t(item.i18nKey)}</span>
@@ -342,7 +342,7 @@ const Navbar = () => {
                                     <>
                                         <Link
                                             to="/favorite_product"
-                                            className="relative p-2 text-white transition-colors hover:text-gray-200 group"
+                                            className="relative p-2 text-whiteColor transition-colors hover:text-gray-200 group"
                                         >
                                             <Heart className="w-6 h-6 transition-transform group-hover:scale-110" />
                                         </Link>
@@ -350,11 +350,11 @@ const Navbar = () => {
                                         {/* Cart */}
                                         <Link
                                             to="/cart"
-                                            className="relative p-2 text-white transition-colors hover:text-gray-200 group"
+                                            className="relative p-2 text-whiteColor transition-colors hover:text-gray-200 group"
                                         >
                                             <ShoppingCart className="w-6 h-6 transition-transform group-hover:scale-110" />
                                             {cartCount > 0 && (
-                                                <span className={`absolute -top-1 ${isRTL ? '-left-1' : '-right-1'} bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold`}>
+                                                <span className={`absolute -top-1 ${isRTL ? '-left-1' : '-right-1'} bg-red-500 text-whiteColor text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold`}>
                                                     {cartCount}
                                                 </span>
                                             )}
@@ -366,7 +366,7 @@ const Navbar = () => {
                                 <div className="relative" ref={desktopLanguageDropdownRef}>
                                     <button
                                         onClick={toggleDesktopLanguageDropdown}
-                                        className={`text-white hover:text-gray-200 transition-colors flex items-center ${isRTL ? 'space-x-reverse' : 'space-x-2'} space-x-2 bg-white bg-opacity-20 rounded-full px-4 py-2 group`}
+                                        className={`text-whiteColor hover:text-gray-200 transition-colors flex items-center ${isRTL ? 'space-x-reverse' : 'space-x-2'} space-x-2 bg-white bg-opacity-20 rounded-full px-4 py-2 group`}
                                     >
                                         <Globe className="w-4 h-4" />
                                         <span className="font-medium">{currentLanguageName}</span>
@@ -379,7 +379,7 @@ const Navbar = () => {
                                     <div className="relative" ref={profileDropdownRef}>
                                         <button
                                             onClick={toggleProfileDropdown}
-                                            className={`flex items-center ${isRTL ? 'space-x-reverse' : 'space-x-3'} space-x-3 text-white hover:text-gray-200 transition-colors group p-1 rounded-lg`}
+                                            className={`flex items-center ${isRTL ? 'space-x-reverse' : 'space-x-3'} space-x-3 text-whiteColor hover:text-gray-200 transition-colors group p-1 rounded-lg`}
                                         >
                                             {renderUserProfile()}
                                             <span className="hidden font-medium lg:block">
@@ -396,7 +396,7 @@ const Navbar = () => {
                                 ) : (
                                     <button
                                         onClick={handleLogin}
-                                        className="px-6 py-2 font-medium text-white transition-all duration-200 bg-white border border-white rounded-full bg-opacity-20 hover:bg-opacity-30 border-opacity-30"
+                                        className="px-6 py-2 font-medium text-whiteColor transition-all duration-200 bg-white border border-white rounded-full bg-opacity-20 hover:bg-opacity-30 border-opacity-30"
                                         style={{ color: 'var(--color-main)' }}
                                     >
                                         <span style={{ color: 'white' }}>{t('login')}</span>
@@ -408,10 +408,10 @@ const Navbar = () => {
                             <div className={`xl:hidden flex items-center ${isRTL ? 'space-x-reverse' : 'space-x-4'} space-x-4`}>
                                 {/* Cart Icon */}
                                 {user && (
-                                    <Link to="/cart" className="relative p-2 text-white">
+                                    <Link to="/cart" className="relative p-2 text-whiteColor">
                                         <ShoppingCart className="w-5 h-5" />
                                         {cartCount > 0 && (
-                                            <span className={`absolute -top-1 ${isRTL ? '-left-1' : '-right-1'} bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center font-bold`}>
+                                            <span className={`absolute -top-1 ${isRTL ? '-left-1' : '-right-1'} bg-red-500 text-whiteColor text-xs rounded-full h-4 w-4 flex items-center justify-center font-bold`}>
                                                 {cartCount}
                                             </span>
                                         )}
@@ -422,7 +422,7 @@ const Navbar = () => {
                                 <div className="relative" ref={mobileLanguageDropdownRef}>
                                     <button
                                         onClick={toggleMobileLanguageDropdown}
-                                        className={`text-white hover:text-gray-200 transition-colors flex items-center ${isRTL ? 'space-x-reverse' : 'space-x-2'} space-x-2 bg-white bg-opacity-20 rounded-full px-4 py-2 group`}
+                                        className={`text-whiteColor hover:text-gray-200 transition-colors flex items-center ${isRTL ? 'space-x-reverse' : 'space-x-2'} space-x-2 bg-white bg-opacity-20 rounded-full px-4 py-2 group`}
                                     >
                                         <Globe className="w-4 h-4" />
                                         <span className="font-medium">{currentLanguageName}</span>
@@ -433,7 +433,7 @@ const Navbar = () => {
                                 {/* Mobile Menu Button */}
                                 <button
                                     onClick={toggleMobileMenu}
-                                    className="p-2 text-white transition-colors bg-white rounded-lg hover:text-gray-200 bg-opacity-10"
+                                    className="p-2 text-whiteColor transition-colors bg-white rounded-lg hover:text-gray-200 bg-opacity-10"
                                 >
                                     {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
                                 </button>
@@ -447,9 +447,9 @@ const Navbar = () => {
             {pages.some(page => location.pathname === page) ? (
                 ''
             ) : (
-                <div 
+                <div
                     className={`fixed inset-0 z-50 xl:hidden transition-opacity duration-300 ${isMobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
-                    }`} 
+                        }`}
                     style={{ top: '4rem' }}
                     dir={isRTL ? 'rtl' : 'ltr'}
                 >
@@ -483,7 +483,7 @@ const Navbar = () => {
                                     ) : (
                                         <button
                                             onClick={handleLogin}
-                                            className="w-full py-3 font-medium text-white transition-all duration-200 rounded-lg shadow-lg hover:opacity-90"
+                                            className="w-full py-3 font-medium text-whiteColor transition-all duration-200 rounded-lg shadow-lg hover:opacity-90"
                                             style={{ backgroundColor: 'var(--color-main)' }}
                                         >
                                             {t('loginSignUp')}

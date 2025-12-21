@@ -298,7 +298,7 @@ const Products = () => {
                                             onClick={() => handleCategoryClick(category.id)}
                                             className={`flex-shrink-0 px-8 py-3 text-[17px] font-bold transition-all duration-300 relative
                   ${isActive
-                                                    ? 'bg-mainColor text-white'
+                                                    ? 'bg-mainColor text-whiteColor'
                                                     : 'bg-white text-mainColor hover:bg-gray-50'
                                                 }`}
                                         >
@@ -323,7 +323,7 @@ const Products = () => {
                 <div className="bg-mainColor py-5 px-6">
                     <div className="max-w-7xl mx-auto flex flex-col">
                         <h1
-                            className={`text-2xl font-black text-white tracking-tight uppercase
+                            className={`text-2xl font-black text-whiteColor tracking-tight uppercase
         ${isRTL ? 'text-right' : 'text-left'}`}
                         >
                             {currentCategory?.name || t('Menu')}
@@ -362,7 +362,7 @@ const Products = () => {
                                 <button
                                     onClick={() => setSelectedSubCategory(null)}
                                     className={`flex-shrink-0 px-3 py-1 rounded-full text-xs transition-colors ${selectedSubCategory === null
-                                        ? 'bg-mainColor text-white'
+                                        ? 'bg-mainColor text-whiteColor'
                                         : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
                                         }`}
                                 >
@@ -373,7 +373,7 @@ const Products = () => {
                                         key={subCategory.id}
                                         onClick={() => handleSubCategoryClick(subCategory.id)}
                                         className={`flex-shrink-0 px-3 py-1 rounded-full text-xs transition-colors ${selectedSubCategory === subCategory.id
-                                            ? 'bg-mainColor text-white'
+                                            ? 'bg-mainColor text-whiteColor'
                                             : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
                                             }`}
                                     >
