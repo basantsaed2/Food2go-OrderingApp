@@ -3,13 +3,10 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
-      // fontFamily: {
-      //   TextFontLight: ["Light"],
-      //   TextFontRegular: ["Regular"],
-      //   TextFontMedium: ["Medium"],
-      //   TextFontSemiBold: ["SemiBold"],
-      //   TextFontBold: ["Bold"],
-      // },
+      fontFamily: {
+        // This makes 'Roboto' the default font for the 'sans' class
+        sans: ['Roboto', 'sans-serif'],
+      },
       colors: {
         mainColor: "var(--color-main)",
         secoundColor: "var(--color-second)",

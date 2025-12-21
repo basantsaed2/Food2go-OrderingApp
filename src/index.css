@@ -2,6 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
+/* In your CSS */
+body {
+  /* This matches the descriptions and prices in the screenshot */
+  font-family: 'Roboto', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  color: #1a1a1a;
+}
+
+h1,
+h2,
+h3 {
+  /* Dish names like 'Spanish Breakfast' use a bold weight of the same font */
+  font-family: 'Roboto', sans-serif;
+  font-weight: 700;
+  /* Bold */
+  letter-spacing: -0.01em;
+}
+
 /* WebKit Scrollbar Page Styles */
 .scrollPage::-webkit-scrollbar {
   width: 2px;
@@ -14,7 +32,7 @@
 }
 
 .scrollPage::-webkit-scrollbar-thumb {
-  background-color: var(--color-main) ;
+  background-color: var(--color-main);
   border-radius: 20px;
 }
 
@@ -49,14 +67,14 @@ nav .active:hover::before {
 }
 
 .categories .active {
-  background-color: 'var(--color-main)' ;
+  background-color: 'var(--color-main)';
   color: #fff;
 }
 
 ;
 
 .offers .active {
-  background-color: 'var(--color-main)' ;
+  background-color: 'var(--color-main)';
   color: #fff;
 }
 
