@@ -296,10 +296,10 @@ const Products = () => {
                                         <button
                                             key={category.id}
                                             onClick={() => handleCategoryClick(category.id)}
-                                            className={`flex-shrink-0 px-8 py-3 text-[17px] font-bold transition-all duration-300 relative
+                                            className={`flex-shrink-0 px-8 py-3 text-[14px] font-semibold transition-all duration-300 relative
                   ${isActive
                                                     ? 'bg-mainColor text-whiteColor'
-                                                    : 'bg-white text-mainColor hover:bg-gray-50'
+                                                    : 'bg-white text-whiteColor hover:bg-gray-50'
                                                 }`}
                                         >
                                             <span className="relative z-10 uppercase tracking-wide">
@@ -323,7 +323,7 @@ const Products = () => {
                 <div className="bg-mainColor py-5 px-6">
                     <div className="max-w-7xl mx-auto flex flex-col">
                         <h1
-                            className={`text-2xl font-black text-whiteColor tracking-tight uppercase
+                            className={`text-xl font-semibold text-whiteColor tracking-tight uppercase
         ${isRTL ? 'text-right' : 'text-left'}`}
                         >
                             {currentCategory?.name || t('Menu')}
