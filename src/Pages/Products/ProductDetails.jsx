@@ -111,29 +111,64 @@ const ProductDetails = ({ product, onClose, language }) => {
     }
   }, [productDetails, product, loadingProductDetails, dispatch]);
 
-  const handleVariationChange = (variationId, optionId, type) => {
+  // Helper to remove only one instance of an ID from an array
+  const handleVariationDecrement = (variationId, optionId) => {
+    setSelectedVariations((prev) => {
+      const current = prev[variationId] || [];
+      const index = current.indexOf(optionId);
+      if (index > -1) {
+        const newArr = [...current];
+        newArr.splice(index, 1); // Removes only the first occurrence found
+        return { ...prev, [variationId]: newArr };
+      }
+      return prev;
+    });
+  };
+
+  const handleVariationChange = (variationId, optionId, type, max) => {
     if (type === 'single') {
       setSelectedVariations((prev) => {
-        // Click same → deselect
         if (prev[variationId] === optionId) {
           const { [variationId]: _, ...rest } = prev;
           return rest;
         }
-        // Click different → select new
         return { ...prev, [variationId]: optionId };
       });
     } else {
-      // Multiple selection (checkbox behavior)
+      // Multiple selection (Increment logic)
       setSelectedVariations((prev) => {
         const current = prev[variationId] || [];
-        if (current.includes(optionId)) {
-          return { ...prev, [variationId]: current.filter(id => id !== optionId) };
-        } else {
-          return { ...prev, [variationId]: [...current, optionId] };
-        }
+        // Check if we can still add more items based on variation.max
+        if (max && current.length >= max) return prev;
+
+        return { ...prev, [variationId]: [...current, optionId] };
       });
     }
   };
+
+  // const handleVariationChange = (variationId, optionId, type) => {
+  //   if (type === 'single') {
+  //     setSelectedVariations((prev) => {
+  //       // Click same → deselect
+  //       if (prev[variationId] === optionId) {
+  //         const { [variationId]: _, ...rest } = prev;
+  //         return rest;
+  //       }
+  //       // Click different → select new
+  //       return { ...prev, [variationId]: optionId };
+  //     });
+  //   } else {
+  //     // Multiple selection (checkbox behavior)
+  //     setSelectedVariations((prev) => {
+  //       const current = prev[variationId] || [];
+  //       if (current.includes(optionId)) {
+  //         return { ...prev, [variationId]: current.filter(id => id !== optionId) };
+  //       } else {
+  //         return { ...prev, [variationId]: [...current, optionId] };
+  //       }
+  //     });
+  //   }
+  // };
 
   const handleAddonChange = (addonId, checked) => {
     setSelectedAddons((prev) => ({
@@ -358,27 +393,20 @@ const ProductDetails = ({ product, onClose, language }) => {
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999] p-4">
       <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="sticky top-0 flex items-center justify-between p-4 bg-white border-b">
-          <h2 className="text-xl font-bold text-mainColor">{displayData.name}</h2>
-          <div className="flex items-center gap-2">
+        <div className="sticky top-0 z-[100] flex items-center justify-between p-4 bg-white border-b shadow-sm">
+          <h2 className="text-xl font-bold text-mainColor truncate pr-4">
+            {displayData.name}
+          </h2>
+          <div className="flex items-center gap-2 flex-shrink-0">
             {/* Favorite Button */}
             {user && (
               <button
                 onClick={handleFavoriteToggle}
                 disabled={loadingChange}
-                className={`p-2 rounded-full transition-colors ${isFavorite
-                  ? "text-red-500 bg-red-50"
-                  : "text-gray-400 hover:text-red-500 hover:bg-red-50"
+                className={`p-2 rounded-full transition-colors ${isFavorite ? "text-red-500 bg-red-50" : "text-gray-400 hover:bg-gray-100"
                   }`}
-                title={
-                  isFavorite
-                    ? t("removeFromFavorites")
-                    : t("addToFavorites")
-                }
               >
-                <Heart
-                  className={`h-5 w-5 ${isFavorite ? "fill-current" : ""}`}
-                />
+                <Heart className={`h-5 w-5 ${isFavorite ? "fill-current" : ""}`} />
               </button>
             )}
 
@@ -424,7 +452,7 @@ const ProductDetails = ({ product, onClose, language }) => {
             )}
           </div>
           {/* Variations */}
-          {displayData.variations?.map((variation) => (
+          {/* {displayData.variations?.map((variation) => (
             <div key={variation.id} className="mb-6">
               <h3 className="mb-3 font-semibold">
                 {variation.name} {variation.required && <span className="text-red-500">*</span>}
@@ -458,7 +486,6 @@ const ProductDetails = ({ product, onClose, language }) => {
                       }}
                     >
                       <div className="flex items-center gap-3">
-                        {/* Radio or Checkbox */}
                         {variation.type === 'single' ? (
                           <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0
             ${isSelected ? 'border-mainColor bg-mainColor' : 'border-gray-300'}`}>
@@ -498,6 +525,97 @@ const ProductDetails = ({ product, onClose, language }) => {
                   return null;
                 })()
               )}
+            </div>
+          ))} */}
+
+          {/* Variations */}
+          {displayData.variations?.map((variation) => (
+            <div key={variation.id} className="mb-6">
+              <h3 className="mb-3 font-semibold">
+                {variation.name} {variation.required ? <span className="text-red-500">*</span> : '(optional)'}
+                {variation.type === 'multiple' && (
+                  <span className="ml-2 text-sm text-gray-500">
+                    ({t('select')} {variation.min || 0}-{variation.max || '∞'})
+                  </span>
+                )}
+              </h3>
+
+              <div className="space-y-2">
+                {variation.options.map((option) => {
+                  const currentSelections = selectedVariations[variation.id] || [];
+                  const optionCount = variation.type === 'single'
+                    ? (currentSelections === option.id ? 1 : 0)
+                    : currentSelections.filter(id => id === option.id).length;
+
+                  const isSelected = optionCount > 0;
+                  const totalSelectedInCategory = Array.isArray(currentSelections) ? currentSelections.length : (isSelected ? 1 : 0);
+                  const isAtMax = variation.type === 'multiple' && variation.max && totalSelectedInCategory >= variation.max;
+
+                  return (
+                    <div
+                      key={option.id}
+                      // 1. Move onClick to the parent DIV
+                      onClick={() => {
+                        if (isAtMax && variation.type === 'multiple') return;
+                        handleVariationChange(variation.id, option.id, variation.type, variation.max);
+                      }}
+                      // 2. Add cursor-pointer
+                      className={`flex items-center justify-between p-3 border rounded-lg transition-all cursor-pointer ${isSelected ? 'border-mainColor bg-mainColor/5' : 'border-gray-200'
+                        } ${isAtMax && variation.type === 'multiple' ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-50'}`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className={isSelected ? 'font-medium' : ''}>{option.name}</span>
+                        {option.price > 0 && (
+                          <span className="text-sm font-semibold text-mainColor">
+                            +{option.price} {t('egp')}
+                          </span>
+                        )}
+                      </div>
+
+                      {variation.type === 'single' ? (
+                        // For single, we just show the radio circle (no separate onClick needed here)
+                        <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center 
+          ${isSelected ? 'border-mainColor bg-mainColor' : 'border-gray-300'}`}>
+                          {isSelected && <div className="w-2.5 h-2.5 bg-white rounded-full" />}
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-3">
+                          {optionCount > 0 && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation(); // 3. IMPORTANT: Stop click from triggering parent div (plus logic)
+                                handleVariationDecrement(variation.id, option.id);
+                              }}
+                              className="p-1 border border-mainColor text-mainColor rounded-full hover:bg-mainColor hover:text-white transition-colors z-10"
+                            >
+                              <Minus className="w-3 h-3" />
+                            </button>
+                          )}
+
+                          {optionCount > 0 && <span className="font-bold text-sm min-w-[15px] text-center">{optionCount}</span>}
+
+                          {/* Plus icon (visual only, since parent div handles the add) */}
+                          <div className={`p-1 rounded-full transition-colors ${isAtMax ? 'bg-gray-100 text-gray-400' : 'bg-mainColor text-white'
+                            }`}>
+                            <Plus className="w-3 h-3" />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Validation Warning */}
+              {variation.required && variation.type === 'multiple' ? (
+                (() => {
+                  const count = (selectedVariations[variation.id] || []).length;
+                  if (variation.min > 0 && count < variation.min) {
+                    return <p className="text-sm text-red-500 mt-2">{t('selectAtLeast')} {variation.min}</p>;
+                  }
+                  return null;
+                })()
+              ) : ''}
             </div>
           ))}
           {/* Addons */}
