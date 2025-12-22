@@ -27,9 +27,9 @@ const LandingPage = () => {
 
                 <div className={`w-full md:w-1/2 flex flex-col gap-3 p-2 md:p-4 items-center justify-center`}>
                     <div className="flex gap-5">
-                        <Link to="/menu" className="bg-thirdColor flex flex-col gap-3  items-center justify-center rounded-xl p-2 md:p-6">
+                        <Link to="/electronic_menu" className="bg-thirdColor flex flex-col gap-3  items-center justify-center rounded-xl p-2 md:p-6">
                             <MenuIcon />
-                            <h1 className="text-2xl text-mainColor">{t("menu")}</h1>
+                            <h1 className="text-2xl text-mainColor">{t("electronicMenu")}</h1>
                         </Link>
                         <Link to="/order_online" className="bg-thirdColor flex flex-col gap-3  items-center justify-center rounded-xl p-2 md:p-6">
                             <DashIcon />

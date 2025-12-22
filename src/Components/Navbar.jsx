@@ -215,11 +215,11 @@ const Navbar = () => {
             style={{ direction: isRTL ? 'rtl' : 'ltr' }}
         >
             {/* User info header */}
-            <div className="px-4 py-3 border-b border-gray-100">
-                <p className="font-semibold text-right text-gray-900 truncate">
+            <div className={`px-4 py-3 ${isRTL ? 'text-right' : 'text-left'} border-b border-gray-100`}>
+                <p className="font-semibold text-gray-900 truncate">
                     {user?.name || t('user')}
                 </p>
-                <p className="text-sm text-right text-gray-500 truncate">
+                <p className="text-sm text-gray-500 truncate">
                     {user?.email || 'user@example.com'}
                 </p>
             </div>
@@ -476,11 +476,11 @@ const Navbar = () => {
                                     {isLoggedIn ? (
                                         <div className="flex items-center">
                                             {renderUserProfile()}
-                                            <button onClick={() => navigate('/profile')} className="flex-1 min-w-0 mr-3">
-                                                <p className="font-semibold text-right text-gray-900 truncate">
+                                            <button onClick={() => navigate('/profile')} className={`flex-1 ${isRTL ? 'text-right' : 'text-left'} min-w-0 mr-3`}>
+                                                <p className="font-semibold text-gray-900 truncate">
                                                     {user?.name || t('user')}
                                                 </p>
-                                                <p className="text-sm text-right text-gray-600 truncate">
+                                                <p className="text-sm text-gray-600 truncate">
                                                     {user?.email || t('manageAccount')}
                                                 </p>
                                             </button>

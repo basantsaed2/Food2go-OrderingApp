@@ -9,7 +9,7 @@ const resources = {
       branches: 'Branches',
       menu: 'Menu',
       orderOnline: 'Order Online',
-      electronicMenu: 'Electronic Menu',
+      electronicMenu: 'E-Menu',
       ourMenu: 'Our Menu',
       selectCategoryToViewProducts: 'Select Category To View Products',
       selectDifferentCategory: 'Select Different Category',
@@ -354,7 +354,7 @@ const resources = {
   ar: {
     translation: {
       Home: "المنزل",
-      electronicMenu: '  القائمة الإلكترونية',
+      electronicMenu: 'منيو إلكتروني',
       ourMenu: 'القائمة لدينا',
       selectCategoryToView: 'اختر الفئة لعرض المنتجات',
       noProductsAvailable: 'لا يوجد منتجات متاحة',
