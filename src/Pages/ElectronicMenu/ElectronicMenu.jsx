@@ -279,9 +279,6 @@ const ElectronicMenu = () => {
                                                 src={category.image_link}
                                                 alt={category.name}
                                                 className="w-full h-full rounded-full object-cover"
-                                                onError={(e) => {
-                                                    e.target.src = 'https://via.placeholder.com/48?text=C';
-                                                }}
                                             />
                                         )}
                                     </div>
