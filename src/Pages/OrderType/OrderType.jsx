@@ -226,7 +226,7 @@ const OrderType = () => {
 
   // Get icon for order type
   const getOrderTypeIcon = (type) => {
-    if (type === 'delivery') return <MdDeliveryDining size={64}/>;
+    if (type === 'delivery') return <MdDeliveryDining size={64} />;
     if (type === 'take_away') return <GiMeal size={64} />;
     return null;
   };
@@ -301,7 +301,7 @@ const OrderType = () => {
                   <span>{t('addNewAddress')}</span>
                 </button>
               </div>
-              <div className="w-full max-w-6xl mx-auto grid grid-cols-1 xl:grid-cols-1 gap-3 max-h-[400px] overflow-y-auto scrollPage">
+              <div className="w-full max-w-6xl mx-auto grid grid-cols-1 xl:grid-cols-1 gap-3 max-h-[500px] overflow-y-auto scrollPage">
                 {addresses.map((addr) => (
                   <AddressItem
                     key={addr.id}
@@ -317,7 +317,7 @@ const OrderType = () => {
           {selectedOrderType === 'take_away' && (
             <div className="flex flex-col items-start w-full gap-3 justify-evenly">
               <h1 className="text-2xl font-semibold text-gray-800">{t('branches')}</h1>
-              <div className="w-full max-h-[400px] overflow-y-auto scrollPage flex flex-col gap-3">
+              <div className="w-full max-h-[500px] overflow-y-auto scrollPage flex flex-col gap-3">
                 {branches.map((branch) => (
                   <BranchItem
                     key={branch.id}

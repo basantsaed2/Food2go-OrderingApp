@@ -140,10 +140,10 @@ const resources = {
       Directions: "Directions",
       //  orderType
       orderType: "Order Type",
-      deliveryAddresses: "delivery Addresses",
-      addNewAddress: "add New Address",
+      deliveryAddresses: "Delivery Addresses",
+      addNewAddress: "Add New Address",
       Areyousureyouwanttodeletethislocation: "Are you sure you want to delete this location",
-      delivery: "delivery",
+      delivery: "Delivery",
       'take away': "Take Away",
       //PRODUCT
       removeFromFavorites: "remove From Favorites",
