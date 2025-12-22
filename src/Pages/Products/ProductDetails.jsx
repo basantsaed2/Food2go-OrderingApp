@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../Context/Auth';
 import { useNavigate } from 'react-router-dom';
 
-const ProductDetails = ({ product, onClose, language }) => {
+const ProductDetails = ({ product, onClose, language, showActions = true }) => {
   const { t } = useTranslation();
   const apiUrl = import.meta.env.VITE_API_BASE_URL;
   const dispatch = useDispatch();
@@ -399,7 +399,7 @@ const ProductDetails = ({ product, onClose, language }) => {
           </h2>
           <div className="flex items-center gap-2 flex-shrink-0">
             {/* Favorite Button */}
-            {user && (
+            {user && showActions && (
               <button
                 onClick={handleFavoriteToggle}
                 disabled={loadingChange}
@@ -798,16 +798,20 @@ const ProductDetails = ({ product, onClose, language }) => {
             </span>
           </div>
           {/* Add to Cart Button */}
-          <button
-            onClick={handleAddToCart}
-            disabled={!canAddToCart()}
-            className={`w-full py-3 rounded-lg font-semibold transition-colors ${canAddToCart()
-              ? 'bg-mainColor text-whiteColor hover:bg-mainColor/90'
-              : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-              }`}
-          >
-            {canAddToCart() ? t('addToCart') : t('completeSelection')}
-          </button>
+          {showActions && (
+            <div className="sticky bottom-0 p-4 bg-white border-t mt-auto">
+              <button
+                onClick={handleAddToCart}
+                disabled={!canAddToCart()}
+                className={`w-full py-3 rounded-lg font-semibold transition-colors ${canAddToCart()
+                  ? 'bg-mainColor text-whiteColor hover:bg-mainColor/90'
+                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  }`}
+              >
+                {canAddToCart() ? t('addToCart') : t('completeSelection')}
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

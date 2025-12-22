@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Heart, Plus } from 'lucide-react';
 import ProductDetails from '../Pages/Products/ProductDetails';
+import ProductDetailsViewOnly from '../Pages/Products/ProductDetailsViewOnly';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '../Store/Slices/cartSlice';
 import { toggleFavorite } from '../Store/Slices/favoritesSlice'; // Import the action
@@ -11,7 +12,8 @@ import { useTranslation } from 'react-i18next';
 const ProductCard = ({
   product,
   language = 'en',
-  onFavoriteToggle
+  onFavoriteToggle,
+  showActions = true // Default to true to maintain existing behavior
 }) => {
   const { t } = useTranslation();
   const apiUrl = import.meta.env.VITE_API_BASE_URL;
@@ -97,7 +99,7 @@ const ProductCard = ({
         className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 flex flex-row h-32 cursor-pointer relative group"
       >
         {/* Favorite Heart */}
-        {user && (
+        {showActions && user && (
           <button
             onClick={handleCardFavoriteToggle}
             className={`absolute top-2 ${language === 'ar' ? 'left-2' : 'right-2'} z-10 p-1 rounded-full transition-all duration-200 ${isCardFavorite
@@ -140,7 +142,7 @@ const ProductCard = ({
             </div>
             <button
               onClick={handleProductClick}
-              className="p-1.5 bg-mainColor text-whiteColor rounded-full hover:bg-mainColor/90 transition-all duration-200 flex-shrink-0 shadow-sm hover:shadow-md transform hover:scale-105"
+              className={`p-1.5 bg-mainColor text-whiteColor rounded-full hover:bg-mainColor/90 transition-all duration-200 flex-shrink-0 shadow-sm hover:shadow-md transform hover:scale-105 ${!showActions ? 'opacity-0 pointer-events-none' : ''}`}
               title={t('quickAddToCart')}
             >
               <Plus className="h-3.5 w-3.5" />
@@ -150,11 +152,20 @@ const ProductCard = ({
       </div>
       {/* Product Details Dialog */}
       {showProductDialog && selectedProduct && (
-        <ProductDetails
-          product={selectedProduct}
-          onClose={handleCloseDialog}
-          language={language}
-        />
+        showActions ? (
+          <ProductDetails
+            product={selectedProduct}
+            onClose={handleCloseDialog}
+            language={language}
+            showActions={true}
+          />
+        ) : (
+          <ProductDetailsViewOnly
+            product={selectedProduct}
+            onClose={handleCloseDialog}
+            language={language}
+          />
+        )
       )}
     </>
   );

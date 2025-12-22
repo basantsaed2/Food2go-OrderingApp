@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Menu, X, ShoppingCart, Heart, User, Phone, MapPin, Globe, Star, ChefHat, LogOut, Settings, Package } from 'lucide-react';
+import { Menu, X, ShoppingCart, Heart, User, Phone, MapPin, Globe, Star, ChefHat, LogOut, Settings, Package, ShoppingBag } from 'lucide-react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setLanguage, setLanguages } from '../Store/Slices/languageSlice';
 import { useTranslation } from 'react-i18next';
@@ -80,6 +80,11 @@ const Navbar = () => {
             icon: ChefHat,
             i18nKey: 'menu',
             path: '/menu'
+        },
+        {
+            icon: ShoppingBag,
+            i18nKey: 'electronicMenu',
+            path: '/electronic_menu'
         },
         {
             icon: ShoppingCart,
@@ -196,7 +201,7 @@ const Navbar = () => {
                 </div>
 
                 {/* Online indicator */}
-                <div className="absolute w-3 h-3 bg-green-500 border-2 border-white rounded-full -bottom-1 -right-1"></div>
+                <div className={`absolute w-3 h-3 bg-green-500 border-2 border-white rounded-full ${isRTL ? '-bottom-1 -left-1' : '-bottom-1 -right-1'}`}></div>
             </div>
         );
     };
@@ -227,7 +232,7 @@ const Navbar = () => {
                 <div className="flex items-center justify-center w-8 h-8 transition-colors rounded-lg group-hover:bg-opacity-20">
                     <User className="w-4 h-4" style={{ color: 'var(--color-main)' }} />
                 </div>
-                <span className="flex-1 font-medium text-right">{t('myProfile')}</span>
+                <span className={`flex-1 font-medium ${isRTL ? 'text-right' : 'text-left'}`}>{t('myProfile')}</span>
             </Link>
 
             <Link
@@ -238,7 +243,7 @@ const Navbar = () => {
                 <div className="flex items-center justify-center w-8 h-8 transition-colors rounded-lg group-hover:bg-opacity-20">
                     <Package className="w-4 h-4" style={{ color: 'var(--color-main)' }} />
                 </div>
-                <span className="flex-1 font-medium text-right">{t('myOrders')}</span>
+                <span className={`flex-1 font-medium ${isRTL ? 'text-right' : 'text-left'}`}>{t('myOrders')}</span>
             </Link>
 
             <div className="pt-2 mt-2 border-t border-gray-100">
@@ -249,7 +254,7 @@ const Navbar = () => {
                     <div className="flex items-center justify-center w-8 h-8 transition-colors rounded-lg group-hover:bg-opacity-20">
                         <LogOut className="w-4 h-4" style={{ color: 'var(--color-main)' }} />
                     </div>
-                    <span className="flex-1 font-medium text-right">{t('logout')}</span>
+                    <span className={`flex-1 font-medium ${isRTL ? 'text-right' : 'text-left'}`}>{t('logout')}</span>
                 </button>
             </div>
         </div>
@@ -503,7 +508,7 @@ const Navbar = () => {
                                             <div className="flex items-center justify-center w-12 h-12 transition-colors rounded-xl group-hover:bg-opacity-20">
                                                 <item.icon className="w-6 h-6" style={{ color: 'var(--color-main)' }} />
                                             </div>
-                                            <span className="flex-1 text-lg font-medium text-right text-gray-800">
+                                            <span className={`flex-1 text-lg font-medium  text-gray-800 ${isRTL ? 'text-right' : 'text-left'}`}>
                                                 {t(item.i18nKey)}
                                             </span>
                                         </Link>
@@ -520,7 +525,7 @@ const Navbar = () => {
                                                 <div className="flex items-center justify-center w-12 h-12 transition-colors rounded-xl group-hover:bg-opacity-20">
                                                     <Heart className="w-6 h-6" style={{ color: 'var(--color-main)' }} />
                                                 </div>
-                                                <span className="flex-1 text-lg font-medium text-right text-gray-800">
+                                                <span className={`flex-1 text-lg font-medium text-gray-800 ${isRTL ? 'text-right' : 'text-left'}`}>
                                                     {t('favorites')}
                                                 </span>
                                             </Link>
@@ -533,7 +538,7 @@ const Navbar = () => {
                                                 <div className="flex items-center justify-center w-12 h-12 transition-colors rounded-xl group-hover:bg-opacity-20">
                                                     <Package className="w-6 h-6" style={{ color: 'var(--color-main)' }} />
                                                 </div>
-                                                <span className="flex-1 text-lg font-medium text-right text-gray-800">
+                                                <span className={`flex-1 text-lg font-medium text-gray-800 ${isRTL ? 'text-right' : 'text-left'}`}>
                                                     {t('Orders')}
                                                 </span>
                                             </Link>
@@ -549,7 +554,7 @@ const Navbar = () => {
                                                 <div className="flex items-center justify-center w-12 h-12 transition-colors rounded-xl group-hover:bg-opacity-20">
                                                     <LogOut className="w-6 h-6 text-red-600" />
                                                 </div>
-                                                <span className="flex-1 text-lg font-medium text-red-600">
+                                                <span className={`flex-1 ${isRTL ? 'text-right' : 'text-left'} text-lg font-medium text-red-600`}>
                                                     {t('logout')}
                                                 </span>
                                             </button>

@@ -9,6 +9,11 @@ const resources = {
       branches: 'Branches',
       menu: 'Menu',
       orderOnline: 'Order Online',
+      electronicMenu: 'Electronic Menu',
+      ourMenu: 'Our Menu',
+      selectCategoryToViewProducts: 'Select Category To View Products',
+      selectDifferentCategory: 'Select Different Category',
+      noProductsAvailable: 'No Products Available',
       orderNow: 'Order Now',
       contactUs: 'Contact Us',
       profile: 'Profile',
@@ -349,6 +354,11 @@ const resources = {
   ar: {
     translation: {
       Home: "المنزل",
+      electronicMenu: '  القائمة الإلكترونية',
+      ourMenu: 'القائمة لدينا',
+      selectCategoryToView: 'اختر الفئة لعرض المنتجات',
+      noProductsAvailable: 'لا يوجد منتجات متاحة',
+      selectDifferentCategory: 'اختر فئة مختلفة',
       APIkeynotconfigured: "لم يتم إعداد مفتاح الـ API",
       Noresultsfound: "لم يتم العثور على نتائج. جرّب مصطلح بحث مختلف أو اختر موقعًا من الخريطة",
       Reversegeocodingfailed: "فشل تحديد العنوان من الموقع الجغرافي",

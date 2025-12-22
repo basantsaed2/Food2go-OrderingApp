@@ -19,6 +19,8 @@ import ProtectedLogin from "./ProtectedData/ProtectedLogin";
 import MyOrderTracking from "./Pages/OrderTracking/MyOrderTracking";
 import Support from "./Pages/SupportPrivacy/Support";
 import PrivacyPolicy from "./Pages/SupportPrivacy/PrivacyPolicy";
+import ElectronicMenu from "./Pages/ElectronicMenu/ElectronicMenu";
+import ElectronicMenuLanding from "./Pages/ElectronicMenu/ElectronicMenuLanding";
 
 export const router = createBrowserRouter([
   {
@@ -61,6 +63,14 @@ export const router = createBrowserRouter([
       {
         path: "policy",
         element: <PrivacyPolicy />
+      },
+      {
+        path: "electronic_menu",
+        element: <ElectronicMenuLanding />
+      },
+      {
+        path: "electronic_menu/items",
+        element: <ElectronicMenu />
       },
 
 
