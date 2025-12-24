@@ -334,6 +334,7 @@ const resources = {
       AddressType: "Address Type",
       SelectZone: "Select Zone",
       Zone: 'Zone',
+      Landmark: "Landmark",
       SelectCity: "Select City",
       City: "City",
       StreetName: "Street Name",
@@ -355,6 +356,7 @@ const resources = {
   ar: {
     translation: {
       Home: "المنزل",
+      Landmark: "علامة مميزة",
       electronicMenu: 'منيو إلكتروني',
       ourMenu: 'القائمة لدينا',
       selectCategoryToView: 'اختر الفئة لعرض المنتجات',
@@ -390,8 +392,10 @@ const resources = {
       AddressType: "نوع العنوان",
       SelectZone: "اختر المنطقة",
       Zone: "المنطقة",
+      extra: "إضافات",
       SelectCity: "اختر المدينة",
       City: "المدينة",
+      street: "الشارع",
       StreetName: "اسم الشارع",
       Enterstreetname: "أدخل اسم الشارع",
       BuildingNumber: "رقم المبنى",
