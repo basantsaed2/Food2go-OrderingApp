@@ -584,7 +584,7 @@ const resources = {
       // Existing translations
       brandName: 'فود تو جو',
       branches: 'الفروع',
-      menu: 'القائمة',
+      menu: 'المنيو',
       orderNow: 'اطلب الآن',
       orderOnline: 'اطلب أونلاين',
       contactUs: 'تواصل معنا',
