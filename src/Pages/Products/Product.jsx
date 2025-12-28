@@ -272,7 +272,7 @@ const Products = () => {
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Categories Navigation */}
-      <div className="sticky top-0 z-20 bg-white shadow-md py-4 px-4">
+      <div className="fixed top-0 z-20 bg-white shadow-md py-4 px-4">
         <div className="w-full relative">
           <div className={`flex items-center justify-between mb-4`}>
             <h2 className={`text-xl font-bold text-mainColor ${isRTL ? 'text-right' : 'text-left'}`}>

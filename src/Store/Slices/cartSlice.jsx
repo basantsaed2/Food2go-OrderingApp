@@ -13,7 +13,8 @@ const loadCartFromStorage = () => {
         subtotal: 0,
         totalDiscount: 0,
         totalTax: 0,
-        priceAfterDiscount: 0
+        priceAfterDiscount: 0,
+        serviceFees: 0
       };
     }
     return JSON.parse(serializedCart);
@@ -25,7 +26,8 @@ const loadCartFromStorage = () => {
       subtotal: 0,
       totalDiscount: 0,
       totalTax: 0,
-      priceAfterDiscount: 0
+      priceAfterDiscount: 0,
+      serviceFees: 0
     };
   }
 };
@@ -141,10 +143,16 @@ const cartSlice = createSlice({
         saveCartToStorage(state);
       }
     },
+    //Add service fees
+    setServiceFees: (state, action) => {
+      state.serviceFees = action.payload;
+      saveCartToStorage(state);
+    },
 
     initializeCart: (state) => {
       const savedCart = loadCartFromStorage();
       state.items = savedCart.items;
+      state.serviceFees = savedCart.serviceFees || 0;
       updateCartTotals(state);
     }
   }
@@ -205,13 +213,13 @@ const calculateItemTaxDetails = (product, variations, addons, quantity) => {
 
   // Product base tax (KEEP multiplied by quantity)
   const productTax = calculateTaxForComponent(
-    parseFloat(product.price_after_discount || product.price), 
-    product.tax_obj || product.taxes, 
+    parseFloat(product.price_after_discount || product.price),
+    product.tax_obj || product.taxes,
     quantity
   );
   taxDetails.productTax = productTax.taxAmount;
   taxDetails.taxableAmount += parseFloat(product.price_after_discount || product.price) * quantity;
-  
+
   // ADD THIS BACK - Product tax breakdown
   taxDetails.taxBreakdown.push({
     name: product.name,
@@ -229,13 +237,13 @@ const calculateItemTaxDetails = (product, variations, addons, quantity) => {
         const option = findOptionInProduct(product, optionId);
         if (option && option.price > 0) {
           const optionTax = calculateTaxForComponent(
-            parseFloat(option.price), 
-            option.taxes || product.tax_obj || product.taxes, 
+            parseFloat(option.price),
+            option.taxes || product.tax_obj || product.taxes,
             quantity
           );
           taxDetails.variationTax += optionTax.taxAmount;
           taxDetails.taxableAmount += parseFloat(option.price) * quantity;
-          
+
           // ADD THIS BACK - Variation tax breakdown
           taxDetails.taxBreakdown.push({
             name: `${product.name} - ${option.name}`,
@@ -258,13 +266,13 @@ const calculateItemTaxDetails = (product, variations, addons, quantity) => {
           const addonQty = addonData.quantity || 1;
           // Addon tax is calculated per addon quantity, NOT multiplied by product quantity
           const addonTax = calculateTaxForComponent(
-            parseFloat(addon.price), 
-            addon.tax || product.tax_obj || product.taxes, 
+            parseFloat(addon.price),
+            addon.tax || product.tax_obj || product.taxes,
             addonQty  // Only use addon quantity, not product quantity
           );
           taxDetails.addonTax += addonTax.taxAmount;
           taxDetails.taxableAmount += parseFloat(addon.price) * addonQty;
-          
+
           // ADD THIS BACK - Addon tax breakdown (with fixed quantity calculation)
           taxDetails.taxBreakdown.push({
             name: `${product.name} - ${addon.name}`,
@@ -279,7 +287,7 @@ const calculateItemTaxDetails = (product, variations, addons, quantity) => {
   }
 
   taxDetails.totalTax = taxDetails.productTax + taxDetails.variationTax + taxDetails.addonTax;
-  
+
   return taxDetails;
 };
 
@@ -429,7 +437,8 @@ export const {
   incrementQuantity,
   decrementQuantity,
   updateItemNote,
-  initializeCart
+  initializeCart,
+  setServiceFees
 } = cartSlice.actions;
 
 export default cartSlice.reducer;

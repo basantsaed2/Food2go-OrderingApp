@@ -226,7 +226,7 @@ const resources = {
       OrderSummary: "Order Summary",
       Subtotal: "Subtotal",
       Discount: "Discount",
-      PriceAfterDiscount: "Price After Discount",
+      priceAfterDiscount: "Price After Discount",
       TaxProductAndAddons: "Tax (Product & Addons)",
       Total: "Total",
       ProceedToCheckout: "Proceed To Checkout",
@@ -350,7 +350,8 @@ const resources = {
 
       APIkeynotconfigured: "API key not configured",
       Noresultsfound: "No results found. Try a different search term or select from the map.",
-      Reversegeocodingfailed: "Reversegeocoding failed"
+      Reversegeocodingfailed: "Reversegeocoding failed",
+      ServiceFees: "Service Fees",
     }
   },
   ar: {
@@ -481,7 +482,7 @@ const resources = {
       OrderSummary: "ملخص الطلب",
       Subtotal: "الإجمالي الفرعي",
       Discount: "الخصم",
-      PriceAfterDiscount: "السعر بعد الخصم",
+      priceAfterDiscount: "السعر بعد الخصم",
       TaxProductAndAddons: "الضريبة (المنتجات والإضافات)",
       Total: "الإجمالي",
 
@@ -710,7 +711,8 @@ const resources = {
       percentageFee: "رسوم {{percentage}}٪",
       paymentMethodWithFee: "{{methodName}} (رسوم {{percentage}}٪)",
 
-      pleaseUploadReceiptForManualPayment: "من فضلك قم برفع إيصال الدفع لإكمال الطلب"
+      pleaseUploadReceiptForManualPayment: "من فضلك قم برفع إيصال الدفع لإكمال الطلب",
+      ServiceFees: "رسوم الخدمة",
     }
   }
 };

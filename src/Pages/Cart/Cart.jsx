@@ -4,9 +4,12 @@ import { Minus, Plus, X, ShoppingCart, Trash2, Receipt } from 'lucide-react';
 import {
   incrementQuantity,
   decrementQuantity,
-  removeFromCart,
-  clearCart
+  clearCart,
+  setServiceFees,
+  removeFromCart
 } from '../../Store/Slices/cartSlice';
+import { usePost } from '../../Hooks/usePost';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
@@ -15,7 +18,37 @@ const Cart = () => {
   const navigate = useNavigate();
   const { items, subtotal, total, itemCount, totalDiscount, totalTax, priceAfterDiscount } = useSelector(state => state.cart);
   const taxSysType = useSelector(state => state.taxType?.data || 'included');
+  const orderType = useSelector(state => state.orderType?.orderType || localStorage.getItem('orderType'));
+  const selectedAddressId = useSelector(state => state.orderType?.selectedAddressId || localStorage.getItem('selectedAddressId'));
+  const selectedBranchId = useSelector(state => state.orderType?.selectedBranchId || localStorage.getItem('selectedBranchId'));
+  const apiUrl = import.meta.env.VITE_API_BASE_URL;
   const { t } = useTranslation();
+
+  const getId = () => {
+    if (orderType === 'delivery') return selectedAddressId;
+    if (orderType === 'take_away') return selectedBranchId;
+    return null;
+  };
+
+  const id = getId();
+
+  console.log(id);
+
+  const { postData: fetchServiceFees, response: serviceFeesResponse } = usePost({
+    url: id ? `${apiUrl}/customer/home/service_fees/${id}?source=web` : '',
+  });
+
+  useEffect(() => {
+    if (id) {
+      fetchServiceFees({});
+    }
+  }, [id]);
+
+  useEffect(() => {
+    if (serviceFeesResponse && serviceFeesResponse.data && serviceFeesResponse.data.service_fees) {
+      dispatch(setServiceFees(serviceFeesResponse.data.service_fees));
+    }
+  }, [serviceFeesResponse, dispatch]);
 
   // Check if any item has excluded tax
   const hasExcludedTax = items.some(item => {
