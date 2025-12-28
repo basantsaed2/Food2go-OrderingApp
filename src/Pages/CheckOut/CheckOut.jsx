@@ -432,7 +432,8 @@ const CheckOut = () => {
             products: products,
             source: "web",
             confirm_order: 0,
-            service_fees: serviceFees,
+            service_fees: orderSummary.serviceFees || 0
+
         };
     };
 
