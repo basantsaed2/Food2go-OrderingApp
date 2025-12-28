@@ -113,12 +113,18 @@ const SignUpPage = () => {
         const payload = {
             f_name: firstName,
             l_name: lastName,
-            phone,
             phone_2: optionalPhone,
-            email,
             password,
             conf_password: configPassword,
         };
+
+        if (verificationMethod === 'phone') {
+            payload.phone = phone;
+        }
+
+        if (verificationMethod === 'email') {
+            payload.email = email;
+        }
 
         if (token) {
             Number(token) === code ? postSignUp(payload) : setErrors({ token: t("InvalidOTPCode") });
