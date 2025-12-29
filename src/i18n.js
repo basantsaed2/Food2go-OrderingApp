@@ -352,6 +352,8 @@ const resources = {
       Noresultsfound: "No results found. Try a different search term or select from the map.",
       Reversegeocodingfailed: "Reversegeocoding failed",
       ServiceFees: "Service Fees",
+      Address: "Address",
+      EnterFullAddress: "Enter Full Address",
     }
   },
   ar: {
@@ -713,6 +715,8 @@ const resources = {
 
       pleaseUploadReceiptForManualPayment: "من فضلك قم برفع إيصال الدفع لإكمال الطلب",
       ServiceFees: "رسوم الخدمة",
+      Address: "العنوان",
+      EnterFullAddress: "أدخل العنوان بالكامل",
     }
   }
 };

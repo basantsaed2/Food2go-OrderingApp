@@ -82,7 +82,6 @@ const AddNewAddress = () => {
   const selectedLanguage = useSelector(
     (state) => state.language?.selected ?? "en"
   );
-
   const { postData, loadingPost, response } = usePost({
     url: `${apiUrl}/customer/address/add`,
   });
@@ -138,8 +137,8 @@ const AddNewAddress = () => {
       backgroundColor: state.isSelected
         ? mainColor
         : state.isFocused
-        ? `${mainColor}10`
-        : "white",
+          ? `${mainColor}10`
+          : "white",
       color: state.isSelected ? "white" : "#1f2937",
       padding: "12px 16px",
       "&:hover": { backgroundColor: `${mainColor}10` },
@@ -177,6 +176,9 @@ const AddNewAddress = () => {
       textColor: "#8b5cf6",
     },
   ];
+  // console.log("user", auth.user?.show_map)
+
+  const showMap = auth.user?.show_map !== 0;
 
   // Initialize map with default location
   useEffect(() => {
@@ -298,10 +300,10 @@ const AddNewAddress = () => {
 
         setAddressSuggestions(localSuggestions.slice(0, 6));
 
-        if (localSuggestions.length === 0) {
+        if (localSuggestions.length === 0 && showMap) {
           setSearchError(
             t(
-"Noresultsfound"            )
+              "Noresultsfound")
           );
         }
       }
@@ -329,10 +331,12 @@ const AddNewAddress = () => {
 
       setAddressSuggestions(localResults);
 
-      if (localResults.length === 0) {
-        setSearchError(t("Nolocalresultsfound"));
-      } else {
-        setSearchError(t("Usinglocalresultsonly"));
+      if (showMap) {
+        if (localResults.length === 0) {
+          setSearchError(t("Nolocalresultsfound"));
+        } else {
+          setSearchError(t("Usinglocalresultsonly"));
+        }
       }
     } finally {
       setIsSearching(false);
@@ -373,8 +377,8 @@ const AddNewAddress = () => {
       if (suggestion.addressDetails) {
         setStreet(
           suggestion.addressDetails.road ||
-            suggestion.addressDetails.street ||
-            ""
+          suggestion.addressDetails.street ||
+          ""
         );
 
         // Auto-detect city
@@ -448,8 +452,7 @@ const AddNewAddress = () => {
 
     try {
       const response = await fetch(
-        `https://api.locationiq.com/v1/reverse.php?key=${locationIqApiKey}&lat=${lat}&lon=${lng}&format=json&accept-language=${
-          selectedLanguage === "ar" ? "ar" : "en"
+        `https://api.locationiq.com/v1/reverse.php?key=${locationIqApiKey}&lat=${lat}&lon=${lng}&format=json&accept-language=${selectedLanguage === "ar" ? "ar" : "en"
         }`
       );
 
@@ -594,19 +597,21 @@ const AddNewAddress = () => {
                     className="w-5 h-5 mr-2"
                     style={{ color: mainColor }}
                   />
-                  {t("SelectLocation")}
+                  {showMap ? t("SelectLocation") : t("Address")}
                 </h2>
-                <button
-                  onClick={getCurrentLocation}
-                  className="flex items-center px-4 py-2 space-x-2 text-sm font-medium transition-colors duration-200 rounded-lg"
-                  style={{
-                    backgroundColor: `${mainColor}10`,
-                    color: mainColor,
-                  }}
-                >
-                  <MdMyLocation className="w-4 h-4" />
-                  <span>{t("MyLocation")}</span>
-                </button>
+                {showMap && (
+                  <button
+                    onClick={getCurrentLocation}
+                    className="flex items-center px-4 py-2 space-x-2 text-sm font-medium transition-colors duration-200 rounded-lg"
+                    style={{
+                      backgroundColor: `${mainColor}10`,
+                      color: mainColor,
+                    }}
+                  >
+                    <MdMyLocation className="w-4 h-4" />
+                    <span>{t("MyLocation")}</span>
+                  </button>
+                )}
               </div>
 
               {/* Search Bar */}
@@ -617,8 +622,13 @@ const AddNewAddress = () => {
                     ref={searchInputRef}
                     type="text"
                     value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder={t("Searchforaddresses")}
+                    onChange={(e) => {
+                      setSearchQuery(e.target.value);
+                      if (!showMap) {
+                        setLocationName(e.target.value);
+                      }
+                    }}
+                    placeholder={showMap ? t("Searchforaddresses") : t("EnterFullAddress")}
                     className="w-full py-3 pl-10 pr-4 transition-all duration-200 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:border-transparent"
                     style={{ focusBorderColor: mainColor }}
                   />
@@ -630,7 +640,7 @@ const AddNewAddress = () => {
                 </div>
 
                 {/* Search Error */}
-                {searchError && (
+                {searchError && showMap && (
                   <div className="flex items-center mt-2 space-x-2 text-sm text-red-600">
                     <FiAlertCircle className="w-4 h-4" />
                     <span>{searchError}</span>
@@ -668,52 +678,54 @@ const AddNewAddress = () => {
               </div>
 
               {/* Map Container - Lower z-index */}
-              <div
-                className="relative overflow-hidden border-2 border-gray-200 rounded-xl"
-                style={{ height: "400px", zIndex: 10 }}
-              >
-                {mapReady && userLocation ? (
-                  <MapContainer
-                    center={[userLocation.lat, userLocation.lng]}
-                    zoom={13}
-                    style={{ height: "100%", width: "100%" }}
-                    ref={mapRef}
-                    key={`map-${userLocation.lat}-${userLocation.lng}`}
-                  >
-                    <TileLayer
-                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    />
-                    <Marker
-                      position={[userLocation.lat, userLocation.lng]}
-                      icon={createCustomIcon(mainColor)}
-                    />
-                    <MapClickHandler onMapClick={handleMapClick} />
-                    <MapUpdater userLocation={userLocation} />
-                  </MapContainer>
-                ) : (
-                  <div className="flex items-center justify-center h-full bg-gray-100">
-                    <div className="text-center">
-                      <div className="w-8 h-8 mx-auto mb-4 border-2 border-gray-400 rounded-full border-t-transparent animate-spin"></div>
-                      <p className="text-gray-500">{t("Loadingmap")}</p>
-                    </div>
-                  </div>
-                )}
-
-                {/* Map Instructions */}
+              {showMap && (
                 <div
-                  className="absolute px-3 py-2 rounded-lg shadow-sm bottom-4 left-4 bg-white/90 backdrop-blur-sm"
-                  style={{ zIndex: 20 }}
+                  className="relative overflow-hidden border-2 border-gray-200 rounded-xl"
+                  style={{ height: "400px", zIndex: 10 }}
                 >
-                  <p className="flex items-center text-xs text-gray-600">
-                    <FiNavigation className="w-3 h-3 mr-1" />
-                    {t("Clickonthemaptosetlocation")}
-                  </p>
+                  {mapReady && userLocation ? (
+                    <MapContainer
+                      center={[userLocation.lat, userLocation.lng]}
+                      zoom={13}
+                      style={{ height: "100%", width: "100%" }}
+                      ref={mapRef}
+                      key={`map-${userLocation.lat}-${userLocation.lng}`}
+                    >
+                      <TileLayer
+                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                      />
+                      <Marker
+                        position={[userLocation.lat, userLocation.lng]}
+                        icon={createCustomIcon(mainColor)}
+                      />
+                      <MapClickHandler onMapClick={handleMapClick} />
+                      <MapUpdater userLocation={userLocation} />
+                    </MapContainer>
+                  ) : (
+                    <div className="flex items-center justify-center h-full bg-gray-100">
+                      <div className="text-center">
+                        <div className="w-8 h-8 mx-auto mb-4 border-2 border-gray-400 rounded-full border-t-transparent animate-spin"></div>
+                        <p className="text-gray-500">{t("Loadingmap")}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Map Instructions */}
+                  <div
+                    className="absolute px-3 py-2 rounded-lg shadow-sm bottom-4 left-4 bg-white/90 backdrop-blur-sm"
+                    style={{ zIndex: 20 }}
+                  >
+                    <p className="flex items-center text-xs text-gray-600">
+                      <FiNavigation className="w-3 h-3 mr-1" />
+                      {t("Clickonthemaptosetlocation")}
+                    </p>
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Selected Location Display */}
-              {locationName && (
+              {locationName && showMap && (
                 <div
                   className="p-4 mt-4 border rounded-xl"
                   style={{
@@ -758,11 +770,10 @@ const AddNewAddress = () => {
                       key={item.type}
                       type="button"
                       onClick={() => setAddressType(item.type)}
-                      className={`p-4 border-2 rounded-xl text-center transition-all duration-200 ${
-                        addressType === item.type
-                          ? "border-current scale-105"
-                          : "border-gray-200 hover:border-gray-300"
-                      }`}
+                      className={`p-4 border-2 rounded-xl text-center transition-all duration-200 ${addressType === item.type
+                        ? "border-current scale-105"
+                        : "border-gray-200 hover:border-gray-300"
+                        }`}
                       style={{
                         backgroundColor:
                           addressType === item.type
@@ -889,7 +900,7 @@ const AddNewAddress = () => {
                     value={moreData}
                     onChange={(e) => setMoreData(e.target.value)}
                     placeholder={t(
-                     "Landmarks"
+                      "Landmarks"
                     )}
                     rows={3}
                     className="w-full px-4 py-3 transition-all duration-200 border border-gray-300 resize-none rounded-xl focus:outline-none focus:ring-2 focus:border-transparent"
