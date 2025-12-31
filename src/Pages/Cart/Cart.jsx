@@ -16,7 +16,7 @@ import { useTranslation } from 'react-i18next';
 const Cart = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { items, subtotal, total, itemCount, totalDiscount, totalTax, priceAfterDiscount } = useSelector(state => state.cart);
+  const { items, subtotal, total, itemCount, totalDiscount, totalTax, priceAfterDiscount, serviceFees } = useSelector(state => state.cart);
   const taxSysType = useSelector(state => state.taxType?.data || 'included');
   const orderType = useSelector(state => state.orderType?.orderType || localStorage.getItem('orderType'));
   const selectedAddressId = useSelector(state => state.orderType?.selectedAddressId || localStorage.getItem('selectedAddressId'));
@@ -282,6 +282,22 @@ const Cart = () => {
                 <span>{t("PriceAfterDiscount")}</span>
                 <span>{priceAfterDiscount.toFixed(2)} {t("egp")}</span>
               </div>
+              {/* 
+              {serviceFees && (
+                <div className="flex justify-between text-blue-600">
+                  <span>
+                    {t("ServiceFees")}
+                    {(serviceFees.type === 'percentage' || serviceFees.type === 'precentage') && (
+                      ` (${serviceFees.amount}%)`
+                    )}
+                  </span>
+                  <span>
+                    +{((serviceFees.type === 'percentage' || serviceFees.type === 'precentage')
+                      ? (subtotal * parseFloat(serviceFees.amount)) / 100
+                      : parseFloat(serviceFees.amount)).toFixed(2)} {t("egp")}
+                  </span>
+                </div>
+              )} */}
 
               {(hasExcludedTax && totalTax > 0) && taxSysType !== "included" && (
                 <div className="flex justify-between text-orange-600">
@@ -298,6 +314,20 @@ const Cart = () => {
                   ) : (
                     <span>{total.toFixed(2)} {t("egp")}</span>
                   )}
+                  {/*
+                  //if it need to calculate service fees
+                   {(() => {
+                    let serviceFeesAmount = 0;
+                    if (serviceFees) {
+                      if (serviceFees.type === 'value') {
+                        serviceFeesAmount = parseFloat(serviceFees.amount);
+                      } else if (serviceFees.type === 'precentage' || serviceFees.type === 'percentage') {
+                        serviceFeesAmount = (subtotal * parseFloat(serviceFees.amount)) / 100;
+                      }
+                    }
+                    const totalWithService = (taxSysType === "included" ? priceAfterDiscount : total) + serviceFeesAmount;
+                    return <span>{totalWithService.toFixed(2)} {t("egp")}</span>;
+                  })()} */}
                 </div>
               </div>
             </div>

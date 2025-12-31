@@ -432,8 +432,8 @@ const CheckOut = () => {
             products: products,
             source: "web",
             confirm_order: 0,
-            service_fees: orderSummary.serviceFees || 0
-
+            service_fees: orderSummary.serviceFees || 0,
+            service_fees_id: cart.serviceFees?.id
         };
     };
 
@@ -724,7 +724,12 @@ const CheckOut = () => {
 
                                 {orderSummary.serviceFees > 0 && (
                                     <div className="flex justify-between text-blue-600">
-                                        <span>{t('ServiceFees')}</span>
+                                        <span>
+                                            {t('ServiceFees')}
+                                            {(cart.serviceFees?.type === 'percentage' || cart.serviceFees?.type === 'precentage') && (
+                                                ` (${cart.serviceFees.amount}%)`
+                                            )}
+                                        </span>
                                         <span>+{orderSummary.serviceFees.toFixed(2)} {t("egp")}</span>
                                     </div>
                                 )}
