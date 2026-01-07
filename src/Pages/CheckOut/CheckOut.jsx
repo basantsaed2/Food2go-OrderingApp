@@ -722,18 +722,6 @@ const CheckOut = () => {
                                     <span>{orderSummary.subtotal.toFixed(2)} {t("egp")}</span>
                                 </div>
 
-                                {orderSummary.serviceFees > 0 && (
-                                    <div className="flex justify-between text-blue-600">
-                                        <span>
-                                            {t('ServiceFees')}
-                                            {(cart.serviceFees?.type === 'percentage' || cart.serviceFees?.type === 'precentage') && (
-                                                ` (${cart.serviceFees.amount}%)`
-                                            )}
-                                        </span>
-                                        <span>+{orderSummary.serviceFees.toFixed(2)} {t("egp")}</span>
-                                    </div>
-                                )}
-
                                 {orderSummary.discount > 0 && (
                                     <div className="flex justify-between text-green-600">
                                         <span>{t('discount')}</span>
@@ -752,6 +740,18 @@ const CheckOut = () => {
                                     <div className="flex justify-between text-blue-600">
                                         <span>{t('tax')}</span>
                                         <span>+{orderSummary.tax.toFixed(2)} {t("egp")}</span>
+                                    </div>
+                                )}
+
+                                {orderSummary.serviceFees > 0 && (
+                                    <div className="flex justify-between text-blue-600">
+                                        <span>
+                                            {t('ServiceFees')}
+                                            {(cart.serviceFees?.type === 'percentage' || cart.serviceFees?.type === 'precentage') && (
+                                                ` (${cart.serviceFees.amount}%)`
+                                            )}
+                                        </span>
+                                        <span>+{orderSummary.serviceFees.toFixed(2)} {t("egp")}</span>
                                     </div>
                                 )}
 
@@ -775,7 +775,7 @@ const CheckOut = () => {
 
                                 <div className="pt-3 border-t">
                                     <div className="flex justify-between text-lg font-bold text-gray-900">
-                                        <span>{t('total')}</span>
+                                        <span>{t('totalPrice')}</span>
                                         <span>
                                             {displayTotal.toFixed(2)} {t("egp")}
                                         </span>
