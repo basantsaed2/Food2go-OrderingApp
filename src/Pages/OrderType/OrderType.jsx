@@ -114,7 +114,16 @@ const OrderType = () => {
     if (branchesData && !loadingBranches) {
       setOrderTypes(branchesData.order_types || []);
       setBranches(branchesData.branches || []);
-      if (!selectedOrderType && branchesData.order_types?.length > 0) {
+      // If only delivery exists, auto-select delivery
+      if (
+        branchesData.order_types?.length === 1 &&
+        branchesData.order_types[0].type === 'delivery' &&
+        user?.token &&
+        selectedOrderType !== 'delivery'
+      ) {
+        setSelectedOrderType('delivery');
+        dispatch(setOrderType('delivery'));
+      } else if (!selectedOrderType && branchesData.order_types?.length > 0) {
         const defaultType = branchesData.order_types.find((type) => type.type === 'take_away') || branchesData.order_types[0];
         if (defaultType) {
           setSelectedOrderType(defaultType.type);
@@ -125,7 +134,7 @@ const OrderType = () => {
     if (branchesError) {
       auth.toastError(t('failedToLoadBranches'));
     }
-  }, [branchesData, loadingBranches, branchesError, auth, t, selectedOrderType, dispatch]);
+  }, [branchesData, loadingBranches, branchesError, auth, t, selectedOrderType, dispatch, user?.token]);
 
   // Process categories data
   // useEffect(() => {
@@ -173,7 +182,7 @@ const OrderType = () => {
   const handleBranchSelect = useCallback(
     (branch) => {
       if (branch.status === 0) {
-        auth.toastError(branch.block_reason || t('BranchBlockedDefault'));
+        auth.toastError(branch.block_reason ? branch.block_reason  :  t('BranchBlockedDefault'));
         return;
       }
       dispatch(setSelectedBranch(branch.id));
@@ -240,7 +249,7 @@ const OrderType = () => {
             <div className="w-32 h-8 bg-gray-200 rounded animate-pulse"></div>
             <div className="flex items-center justify-center w-full gap-x-4 md:gap-x-6">
               {[1, 2].map((i) => (
-                <div key={i} className="min-w-40 h-40 bg-gray-200 rounded-lg animate-pulse"></div>
+                <div key={i} className="h-40 bg-gray-200 rounded-lg min-w-40 animate-pulse"></div>
               ))}
             </div>
           </div>
@@ -297,7 +306,7 @@ const OrderType = () => {
                   className="flex items-center gap-2 px-4 py-2 text-sm text-white transition rounded-lg bg-mainColor hover:bg-mainColor/90"
                   aria-label={t('addNewAddress')}
                 >
-                  <Plus className="h-5 w-5" />
+                  <Plus className="w-5 h-5" />
                   <span>{t('addNewAddress')}</span>
                 </button>
               </div>
@@ -314,7 +323,7 @@ const OrderType = () => {
               </div>
             </>
           )}
-          {selectedOrderType === 'take_away' && (
+          {selectedOrderType === 'take_away' && orderTypes.some((type) => type.type === 'take_away') && (
             <div className="flex flex-col items-start w-full gap-3 justify-evenly">
               <h1 className="text-2xl font-semibold text-gray-800">{t('branches')}</h1>
               <div className="w-full max-h-[500px] overflow-y-auto scrollPage flex flex-col gap-3">
