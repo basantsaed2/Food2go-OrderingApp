@@ -71,20 +71,20 @@ const ElectronicMenu = () => {
     }, [dispatch, urlOrderType, urlAddressId, urlBranchId, orderType, selectedAddressId, selectedBranchId]);
 
     // Special Categories
-    const SPECIAL_CATEGORIES = [
-        {
-            id: 'recommended',
-            name: t('recommendedProducts'),
-            image_link: null,
-            icon: <Star size={20} className="text-amber-500" fill="currentColor" />
-        },
-        {
-            id: 'offers',
-            name: t('offersProducts'),
-            image_link: null,
-            icon: <Tag size={20} className="text-red-500" fill="currentColor" />
-        }
-    ];
+    // const SPECIAL_CATEGORIES = [
+    //     {
+    //         id: 'recommended',
+    //         name: t('recommendedProducts'),
+    //         image_link: null,
+    //         icon: <Star size={20} className="text-amber-500" fill="currentColor" />
+    //     },
+    //     {
+    //         id: 'offers',
+    //         name: t('offersProducts'),
+    //         image_link: null,
+    //         icon: <Tag size={20} className="text-red-500" fill="currentColor" />
+    //     }
+    // ];
 
     // Build API URL for categories
     const buildCategoriesUrl = useCallback(() => {
@@ -147,11 +147,13 @@ const ElectronicMenu = () => {
         if (dataCategories && !loadingCategories) {
             // Merge special categories with fetched categories
             const fetchedCategories = dataCategories.categories || [];
-            setCategoriesData([...SPECIAL_CATEGORIES, ...fetchedCategories]);
-        } else if (!loadingCategories && dataCategories === null) {
-            // Fallback if fetch fails or is empty, still show special categories
-            setCategoriesData([...SPECIAL_CATEGORIES]);
-        }
+            // setCategoriesData([...SPECIAL_CATEGORIES, ...fetchedCategories]);
+            setCategoriesData([...fetchedCategories]);
+        } 
+        // else if (!loadingCategories && dataCategories === null) {
+        //     // Fallback if fetch fails or is empty, still show special categories
+        //     setCategoriesData([...SPECIAL_CATEGORIES]);
+        // }
     }, [dataCategories, loadingCategories, t]);
 
 

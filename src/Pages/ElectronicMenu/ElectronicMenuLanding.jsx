@@ -43,20 +43,20 @@ const ElectronicMenuLanding = () => {
         refetchCategories();
     }, [buildCategoriesUrl, refetchCategories]);
 
-    const SPECIAL_CATEGORIES = [
-        {
-            id: 'recommended',
-            name: t('recommendedProducts'),
-            image_link: mainData?.logo_link,
-            // description: t('checkoutRecommended') || 'Best selection just for you'
-        },
-        {
-            id: 'offers',
-            name: t('offersProducts'),
-            image_link: mainData?.logo_link,
-            // description: t('checkoutOffers') || 'Great deals and discounts'
-        }
-    ];
+    // const SPECIAL_CATEGORIES = [
+    //     {
+    //         id: 'recommended',
+    //         name: t('recommendedProducts'),
+    //         image_link: mainData?.logo_link,
+    //         // description: t('checkoutRecommended') || 'Best selection just for you'
+    //     },
+    //     {
+    //         id: 'offers',
+    //         name: t('offersProducts'),
+    //         image_link: mainData?.logo_link,
+    //         // description: t('checkoutOffers') || 'Great deals and discounts'
+    //     }
+    // ];
 
     const handleCategoryClick = (id) => {
         navigate(`/electronic_menu/items?category=${id}`);
@@ -71,7 +71,7 @@ const ElectronicMenuLanding = () => {
     }
 
     const allCategories = [
-        ...SPECIAL_CATEGORIES,
+        // ...SPECIAL_CATEGORIES,
         ...(dataCategories?.categories || []).map(cat => ({
             ...cat,
             // Use Utensils as default icon if no image/icon
