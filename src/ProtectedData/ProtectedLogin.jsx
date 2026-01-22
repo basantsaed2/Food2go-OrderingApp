@@ -25,7 +25,7 @@ const ProtectedLogin = () => {
                      return;
               }
 
-              if (!user && (profile || favorites || checkOut || cart || orderTraking || orders)) {
+              if (!user && !isAuth && (profile || favorites || checkOut || cart || orderTraking || orders)) {
                      if (!isToastShown) {
                             auth.toastError('You must be logged in to continue');
                             setIsToastShown(true);
