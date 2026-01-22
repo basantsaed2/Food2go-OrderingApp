@@ -4,12 +4,12 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../Context/Auth';
 import { usePost } from '../../Hooks/usePost';
 import { useGet } from '../../Hooks/useGet';
-import { 
-  ArrowLeft, 
-  Clock, 
-  ChefHat, 
-  CheckCircle, 
-  Truck, 
+import {
+  ArrowLeft,
+  Clock,
+  ChefHat,
+  CheckCircle,
+  Truck,
   AlertCircle,
   Package,
   History,
@@ -23,7 +23,7 @@ const MyOrderTracking = () => {
   const { t } = useTranslation();
   const auth = useAuth();
   const navigate = useNavigate();
-  
+
   // State management
   const [activeTab, setActiveTab] = useState('pending');
   const [orders, setOrders] = useState([]);
@@ -55,10 +55,19 @@ const MyOrderTracking = () => {
   // Handle customer pending orders
   useEffect(() => {
     if (dataOrders && dataOrders.orders && activeTab === 'pending') {
-      const pendingOrders = dataOrders.orders.map(order => ({
-        ...order,
-        isCancellable: order.can_cancel && isCancellable(order)
-      }));
+      const globalCancelTime = dataOrders.cancel_time;
+      const pendingOrders = dataOrders.orders.map(order => {
+        // Use order-specific cancel_time if available, otherwise use global one
+        const effectiveOrder = {
+          ...order,
+          cancel_time: order.cancel_time || globalCancelTime
+        };
+
+        return {
+          ...effectiveOrder,
+          isCancellable: order.can_cancel && isCancellable(effectiveOrder)
+        };
+      });
       setOrders(pendingOrders);
     }
   }, [dataOrders, activeTab]);
@@ -122,7 +131,7 @@ const MyOrderTracking = () => {
       }
 
       const currentTime = new Date().getTime();
-      const orderTimeString = `${order.order_date}T${order.date}`;
+      const orderTimeString = `${order.order_date}T${order.date}Z`;
       const orderTime = new Date(orderTimeString).getTime();
 
       if (isNaN(orderTime)) {
@@ -131,7 +140,11 @@ const MyOrderTracking = () => {
       }
 
       // استخدام cancel_time من الـ order إذا كان موجوداً، وإلا استخدام الوقت الافتراضي
-      const cancelTime = order.cancel_time || '00:15:00'; // وقت افتراضي 15 دقيقة
+      const cancelTime = order.cancel_time;
+
+      if (!cancelTime) {
+        return false;
+      }
 
       const [hours, minutes, seconds] = cancelTime.split(':').map(Number);
       if (isNaN(hours) || isNaN(minutes) || isNaN(seconds)) {
@@ -150,7 +163,7 @@ const MyOrderTracking = () => {
   };
 
   const formatTime = (dateString, timeString) => {
-    const date = new Date(`${dateString}T${timeString}`);
+    const date = new Date(`${dateString}T${timeString}Z`);
     return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
   };
 
@@ -158,12 +171,14 @@ const MyOrderTracking = () => {
   const getRemainingCancelTime = (order) => {
     try {
       const currentTime = new Date().getTime();
-      const orderTimeString = `${order.order_date}T${order.date}`;
+      const orderTimeString = `${order.order_date}T${order.date}Z`;
       const orderTime = new Date(orderTimeString).getTime();
 
       if (isNaN(orderTime)) return null;
 
-      const cancelTime = order.cancel_time || '00:15:00';
+      const cancelTime = order.cancel_time;
+      if (!cancelTime) return null;
+
       const [hours, minutes, seconds] = cancelTime.split(':').map(Number);
       const cancelWindow = (hours * 3600 + minutes * 60 + seconds) * 1000;
 
@@ -184,31 +199,31 @@ const MyOrderTracking = () => {
 
   // Status configuration
   const statusConfig = {
-    pending: { 
-      label: t('Waiting'), 
-      icon: Clock, 
-      color: 'text-yellow-500', 
+    pending: {
+      label: t('pending'),
+      icon: Clock,
+      color: 'text-yellow-500',
       bg: 'bg-yellow-100',
       border: 'border-yellow-300'
     },
-    processing: { 
-      label: t('Preparing'), 
-      icon: ChefHat, 
-      color: 'text-blue-500', 
+    processing: {
+      label: t('Preparing'),
+      icon: ChefHat,
+      color: 'text-blue-500',
       bg: 'bg-blue-100',
       border: 'border-blue-300'
     },
-    confirmed: { 
-      label: t('Done'), 
-      icon: CheckCircle, 
-      color: 'text-green-500', 
+    confirmed: {
+      label: t('Done'),
+      icon: CheckCircle,
+      color: 'text-green-500',
       bg: 'bg-green-100',
       border: 'border-green-300'
     },
-    out_for_delivery: { 
-      label: t('Out for delivery'), 
-      icon: Truck, 
-      color: 'text-purple-500', 
+    out_for_delivery: {
+      label: t('Out for delivery'),
+      icon: Truck,
+      color: 'text-purple-500',
       bg: 'bg-purple-100',
       border: 'border-purple-300'
     },
@@ -229,7 +244,7 @@ const MyOrderTracking = () => {
   };
 
   const getProgress = (status) => {
-    const statuses = ['pending', 'processing', 'confirmed', 'out_for_delivery','delivered'];
+    const statuses = ['pending', 'processing', 'confirmed', 'out_for_delivery', 'delivered'];
     const normalizedStatus = status?.toLowerCase() || 'pending';
     const index = statuses.indexOf(normalizedStatus);
     return index >= 0 ? ((index + 1) / statuses.length) * 100 : 0;
@@ -271,14 +286,14 @@ const MyOrderTracking = () => {
               <p className="text-sm text-gray-600 capitalize">
                 {t('Type')}: {order.order_type?.replace('_', ' ')} • {t('Branch')}: {order.branch_name}
               </p>
-              
+
               {/* عرض وقت الإلغاء المتبقي */}
               {canCancel && remainingTime && (
                 <p className="mt-1 text-sm text-green-600">
                   {t('CancelAvailableFor')}: {remainingTime.minutes}:{remainingTime.seconds.toString().padStart(2, '0')} {t('minutes')}
                 </p>
               )}
-              
+
               {/* رسالة انتهاء وقت الإلغاء */}
               {!canCancel && order.order_status === 'pending' && (
                 <p className="mt-1 text-sm text-red-600">
@@ -286,19 +301,22 @@ const MyOrderTracking = () => {
                 </p>
               )}
             </div>
-            <div className="flex items-center gap-2">
-              <div className={`${currentStatus.bg} ${currentStatus.border} border-2 rounded-full px-3 py-1 flex items-center gap-2`}>
+            <div className="flex flex-wrap items-center gap-2">
+              <div className={`${currentStatus.bg} ${currentStatus.border} border-2 rounded-full px-3 py-1 flex items-center gap-2 shadow-sm`}>
                 <StatusIcon className={`h-4 w-4 ${currentStatus.color}`} />
                 <span className={`text-sm font-semibold ${currentStatus.color}`}>
                   {currentStatus.label}
                 </span>
               </div>
+
+              {/* زر الإلغاء بجوار الحالة */}
               {canCancel && (
                 <button
                   onClick={() => handleOpenCancelModal(order.id)}
-                  className="flex items-center px-3 py-1 text-sm text-red-500 transition-colors bg-red-100 rounded-md hover:bg-red-200"
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-red-600 transition-all duration-200 border-2 border-red-50 rounded-full bg-red-50 hover:bg-red-600 hover:text-white hover:border-red-600 active:scale-95 shadow-sm group"
                 >
-                  <AlertCircle className="w-4 h-4 mr-1" /> {t('CancelOrder')}
+                  <AlertCircle className="w-3.5 h-3.5 transition-transform group-hover:scale-110" />
+                  {t('CancelOrder')}
                 </button>
               )}
             </div>
@@ -397,25 +415,23 @@ const MyOrderTracking = () => {
                 </div>
                 <div className="relative flex justify-between">
                   {Object.entries(statusConfig).map(([statusKey, config], idx) => {
-                    if (!['pending', 'processing', 'confirmed', 'out_for_delivery','delivered'].includes(statusKey)) return null;
+                    if (!['pending', 'processing', 'confirmed', 'out_for_delivery', 'delivered'].includes(statusKey)) return null;
                     const Icon = config.icon;
                     const isActive = getProgress(order.order_status) >= ((idx + 1) / 4) * 100;
                     const isCurrent = order.order_status?.toLowerCase() === statusKey;
-                    
+
                     return (
                       <div key={statusKey} className="flex flex-col items-center">
                         <div
-                          className={`w-8 h-8 rounded-full flex items-center justify-center border-2 transition-all duration-300 ${
-                            isActive 
-                              ? `${config.bg} ${config.border} shadow-sm` 
+                          className={`w-8 h-8 rounded-full flex items-center justify-center border-2 transition-all duration-300 ${isActive
+                              ? `${config.bg} ${config.border} shadow-sm`
                               : 'bg-gray-100 border-gray-300'
-                          } ${isCurrent ? 'scale-110 ring-2 ring-offset-2 ring-mainColor/30' : ''}`}
+                            } ${isCurrent ? 'scale-110 ring-2 ring-offset-2 ring-mainColor/30' : ''}`}
                         >
                           <Icon className={`h-4 w-4 ${isActive ? config.color : 'text-gray-400'}`} />
                         </div>
-                        <span className={`text-xs mt-2 font-medium text-center max-w-16 ${
-                          isActive ? 'text-gray-900' : 'text-gray-500'
-                        }`}>
+                        <span className={`text-xs mt-2 font-medium text-center max-w-16 ${isActive ? 'text-gray-900' : 'text-gray-500'
+                          }`}>
                           {config.label}
                         </span>
                       </div>
@@ -450,7 +466,7 @@ const MyOrderTracking = () => {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       {/* Header */}
       <div className="sticky top-0 z-10 bg-white border-b border-gray-200 shadow-sm">
-        <div className="px-4 py-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+        <div className="px-2 py-2 md:px-6 md:py-6 w-full">
           <div className="flex items-center gap-4">
             <button
               onClick={() => navigate(-1)}
@@ -464,7 +480,7 @@ const MyOrderTracking = () => {
                 {t('myOrders')}
               </h1>
               <p className="mt-1 text-sm text-gray-500">
-                {activeTab === 'pending' 
+                {activeTab === 'pending'
                   ? `${orders.length} ${orders.length === 1 ? t('pendingorder') : t('pendingorders')}`
                   : `${historyOrders.length} ${historyOrders.length === 1 ? t('pastorder') : t('pastorders')}`
                 }
@@ -476,11 +492,10 @@ const MyOrderTracking = () => {
           <div className="flex p-1 mt-6 space-x-1 bg-gray-100 rounded-xl">
             <button
               onClick={() => setActiveTab('pending')}
-              className={`flex items-center gap-2 flex-1 justify-center rounded-lg py-2.5 text-sm font-medium transition-all ${
-                activeTab === 'pending'
-                  ? 'bg-white text-mainColor shadow-sm'
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
+              className={`flex items-center gap-2 flex-1 justify-center rounded-lg py-2.5 text-sm font-medium transition-all ${activeTab === 'pending'
+                ? 'bg-white text-mainColor shadow-sm'
+                : 'text-gray-500 hover:text-gray-700'
+                }`}
             >
               <Package className="w-4 h-4" />
               {t('PendingOrders')}
@@ -492,11 +507,10 @@ const MyOrderTracking = () => {
             </button>
             <button
               onClick={() => setActiveTab('history')}
-              className={`flex items-center gap-2 flex-1 justify-center rounded-lg py-2.5 text-sm font-medium transition-all ${
-                activeTab === 'history'
-                  ? 'bg-white text-mainColor shadow-sm'
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
+              className={`flex items-center gap-2 flex-1 justify-center rounded-lg py-2.5 text-sm font-medium transition-all ${activeTab === 'history'
+                ? 'bg-white text-mainColor shadow-sm'
+                : 'text-gray-500 hover:text-gray-700'
+                }`}
             >
               <History className="w-4 h-4" />
               {t('OrderHistory')}
@@ -511,7 +525,7 @@ const MyOrderTracking = () => {
       </div>
 
       {/* Main Content */}
-      <div className="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8 lg:py-8">
+      <div className="px-2 py-2 md:px-6 md:py-6 w-full">
         {activeTab === 'pending' && (
           <div>
             {!hasPendingOrders ? (
@@ -553,36 +567,64 @@ const MyOrderTracking = () => {
 
       {/* Cancel Order Modal */}
       {openCancelModal && (
-        <Dialog open={true} onClose={handleCloseCancelModal} className="relative z-10">
-          <DialogBackdrop className="fixed inset-0 w-full transition-opacity bg-gray-500 bg-opacity-75" />
-          <div className="fixed inset-0 z-10 w-full overflow-y-auto">
-            <div className="flex items-center justify-center w-full min-h-screen">
-              <DialogPanel className="relative bg-white rounded-2xl p-6 w-[60%] lg:w-[40%]">
-                <div className="flex flex-col items-center">
-                  <MdWarning className="w-12 h-12 text-red-500" aria-hidden="true" />
-                  <h3 className="mt-2 text-lg font-semibold text-gray-900">{t('CancelOrder')}</h3>
-                  <p className="mt-2 text-sm text-center text-gray-600">{t('PleaseProvideReason')}</p>
-                  <textarea
-                    value={cancelReason}
-                    onChange={(e) => setCancelReason(e.target.value)}
-                    placeholder={t('EnterReason')}
-                    className="w-full p-2 mt-4 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-mainColor focus:border-transparent"
-                    rows="3"
-                  />
+        <Dialog open={true} onClose={handleCloseCancelModal} className="relative z-50">
+          <DialogBackdrop className="fixed inset-0 transition-opacity bg-gray-900/60 backdrop-blur-sm" />
+
+          <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
+            <div className="flex items-center justify-center min-h-full p-4 text-center sm:p-0">
+              <DialogPanel className="relative transform overflow-hidden rounded-3xl bg-white text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-md">
+                <div className="px-6 pt-8 pb-6 bg-white sm:p-8 sm:pb-6">
+                  <div className="sm:flex sm:items-start">
+                    <div className="flex items-center justify-center w-12 h-12 mx-auto bg-red-100 rounded-2xl shrink-0 sm:mx-0 sm:h-12 sm:w-12">
+                      <MdWarning className="w-7 h-7 text-red-600" aria-hidden="true" />
+                    </div>
+                    <div className="mt-4 text-center sm:ml-4 sm:mt-0 sm:text-left">
+                      <h3 className="text-xl font-bold leading-6 text-gray-900">
+                        {t('CancelOrder')}
+                      </h3>
+                      <div className="mt-3">
+                        <p className="text-sm text-gray-500 leading-relaxed">
+                          {t('PleaseProvideReason')}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-6">
+                    <label htmlFor="cancel-reason" className="block mb-2 text-sm font-medium text-gray-700">
+                      {t('Reason')}:
+                    </label>
+                    <textarea
+                      id="cancel-reason"
+                      value={cancelReason}
+                      onChange={(e) => setCancelReason(e.target.value)}
+                      placeholder={t('EnterReason')}
+                      className="w-full px-4 py-3 text-sm text-gray-900 transition-all border-2 border-gray-100 rounded-2xl focus:ring-4 focus:ring-red-100 focus:border-red-500 bg-gray-50/50 hover:bg-white resize-none"
+                      rows="4"
+                    />
+                  </div>
                 </div>
-                <div className="flex justify-end gap-3 mt-4">
+
+                <div className="flex flex-col-reverse gap-3 px-6 py-6 border-t border-gray-50 bg-gray-50/30 sm:flex-row sm:justify-end sm:px-8">
                   <button
+                    type="button"
                     onClick={handleCloseCancelModal}
-                    className="px-4 py-2 text-sm text-gray-700 transition-colors bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+                    className="inline-flex justify-center w-full px-5 py-3 text-sm font-semibold text-gray-700 transition-colors bg-white border border-gray-200 rounded-2xl sm:w-auto hover:bg-gray-50"
                   >
                     {t('Cancel')}
                   </button>
                   <button
+                    type="button"
                     onClick={() => handleCancelOrder(openCancelModal)}
                     disabled={!cancelReason.trim() || loadingCancel}
-                    className="px-4 py-2 text-sm text-white transition-colors bg-red-600 rounded-md hover:bg-red-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                    className="inline-flex justify-center w-full px-8 py-3 text-sm font-bold text-white transition-all bg-red-600 rounded-2xl sm:w-auto hover:bg-red-700 disabled:bg-gray-300 disabled:cursor-not-allowed hover:shadow-lg active:scale-95"
                   >
-                    {loadingCancel ? t('Cancelling...') : t('ConfirmCancel')}
+                    {loadingCancel ? (
+                      <div className="flex items-center gap-2">
+                        <div className="w-4 h-4 border-2 border-white rounded-full animate-spin border-t-transparent"></div>
+                        {t('Cancelling...')}
+                      </div>
+                    ) : t('ConfirmCancel')}
                   </button>
                 </div>
               </DialogPanel>

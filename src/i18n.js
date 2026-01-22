@@ -354,6 +354,11 @@ const resources = {
       ServiceFees: "Service Fees",
       Address: "Address",
       EnterFullAddress: "Enter Full Address",
+       PleaseProvideReason: "Please Provide Reason",
+      CancelOrder: "Cancel Order",
+      Reason: "Reason",
+      EnterReason: "Enter Reason",
+      ConfirmCancel: "Confirm Cancel",
     }
   },
   ar: {
@@ -717,6 +722,13 @@ const resources = {
       ServiceFees: "رسوم الخدمة",
       Address: "العنوان",
       EnterFullAddress: "أدخل العنوان بالكامل",
+
+       PleaseProvideReason: "من فضلك ادخل سبب الالغاء",
+      CancelOrder: "الغاء الطلب",
+      Reason: "سبب الالغاء",
+      EnterReason: "أدخل سبب الالغاء",
+      ConfirmCancel: "تأكيد الغاء الطلب",
+ 
     }
   }
 };
