@@ -129,7 +129,7 @@ const OffersProducts = () => {
       className="w-full py-4 px-4 relative"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
-      <div className="max-w-7xl mx-auto">
+      <div className="w-full md:px-8">
         {/* Section Header */}
         <div className={`flex justify-between items-center mb-8`}>
           <div>
