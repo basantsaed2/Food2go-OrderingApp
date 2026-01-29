@@ -32,6 +32,10 @@ const MyOrderTracking = () => {
   const [openCancelModal, setOpenCancelModal] = useState(null);
   const [cancelReason, setCancelReason] = useState('');
 
+  // Pagination state
+  const [visiblePendingCount, setVisiblePendingCount] = useState(15);
+  const [visibleHistoryCount, setVisibleHistoryCount] = useState(15);
+
   // API hooks
   const { refetch: refetchOrders, loading: loadingOrders, data: dataOrders } = useGet({
     url: `${apiUrl}/customer/orders`,
@@ -424,8 +428,8 @@ const MyOrderTracking = () => {
                       <div key={statusKey} className="flex flex-col items-center">
                         <div
                           className={`w-8 h-8 rounded-full flex items-center justify-center border-2 transition-all duration-300 ${isActive
-                              ? `${config.bg} ${config.border} shadow-sm`
-                              : 'bg-gray-100 border-gray-300'
+                            ? `${config.bg} ${config.border} shadow-sm`
+                            : 'bg-gray-100 border-gray-300'
                             } ${isCurrent ? 'scale-110 ring-2 ring-offset-2 ring-mainColor/30' : ''}`}
                         >
                           <Icon className={`h-4 w-4 ${isActive ? config.color : 'text-gray-400'}`} />
@@ -446,9 +450,13 @@ const MyOrderTracking = () => {
     );
   };
 
-  const isLoading = loadingOrders || loadingOrdersHistory;
+  // Determine if we should show the full-page loader
+  // We only show it on the initial load when no data is available yet
+  const isLoadingInitialPending = loadingOrders && orders.length === 0;
+  const isLoadingInitialHistory = loadingOrdersHistory && historyOrders.length === 0;
+  const showFullPageLoader = activeTab === 'pending' ? isLoadingInitialPending : isLoadingInitialHistory;
 
-  if (isLoading) {
+  if (showFullPageLoader) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50">
         <div className="text-center">
@@ -542,7 +550,18 @@ const MyOrderTracking = () => {
               </div>
             ) : (
               <div className="space-y-6">
-                {orders.map((order) => renderOrderItem(order, false))}
+                {orders.slice(0, visiblePendingCount).map((order) => renderOrderItem(order, false))}
+
+                {orders.length > visiblePendingCount && (
+                  <div className="flex justify-center pt-4">
+                    <button
+                      onClick={() => setVisiblePendingCount(prev => prev + 15)}
+                      className="px-8 py-3 text-sm font-bold text-white transition-all rounded-2xl bg-mainColor hover:bg-mainColor/90 hover:shadow-lg active:scale-95"
+                    >
+                      {t('ShowMore')}
+                    </button>
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -558,7 +577,18 @@ const MyOrderTracking = () => {
               </div>
             ) : (
               <div className="space-y-6">
-                {historyOrders.map((order) => renderOrderItem(order, true))}
+                {historyOrders.slice(0, visibleHistoryCount).map((order) => renderOrderItem(order, true))}
+
+                {historyOrders.length > visibleHistoryCount && (
+                  <div className="flex justify-center pt-4">
+                    <button
+                      onClick={() => setVisibleHistoryCount(prev => prev + 15)}
+                      className="px-8 py-3 text-sm font-bold text-gray-700 transition-all bg-white border border-gray-200 rounded-2xl hover:bg-gray-50 hover:shadow-md active:scale-95"
+                    >
+                      {t('ShowMore')}
+                    </button>
+                  </div>
+                )}
               </div>
             )}
           </div>
