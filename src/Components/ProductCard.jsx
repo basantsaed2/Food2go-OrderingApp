@@ -22,6 +22,10 @@ const ProductCard = ({
   const token = useSelector((state) => state?.user?.data?.token || '');
   const auth = useAuth();
   const user = useSelector(state => state.user?.data?.user);
+  const restaurantOpen = useSelector((state) => state.categories?.open ?? true);
+  const restaurantCloseMessage = useSelector((state) => state.categories?.closeMessage || '');
+  const selectedAddressId = useSelector((state) => state.orderType?.selectedAddressId);
+  const selectedBranchId = useSelector((state) => state.orderType?.selectedBranchId);
 
   // Get favorite status from Redux
   const favorites = useSelector((state) => state.favorites.items);
@@ -65,6 +69,20 @@ const ProductCard = ({
   // Handle quick add to cart
   const handleQuickAddToCart = (e) => {
     e.stopPropagation();
+
+    // Check if branch or address is selected
+    if (!selectedBranchId && !selectedAddressId) {
+      // If no location selected, open product details instead
+      handleProductClick(e);
+      return;
+    }
+
+    // Check if restaurant is closed
+    if (restaurantOpen == false) {
+      auth.toastError(`${t('restaurantIsClosedNow')} ${restaurantCloseMessage ? `\n ${restaurantCloseMessage}` : ''}`);
+      return;
+    }
+
     const cartItem = {
       product,
       quantity: 1,
@@ -81,6 +99,13 @@ const ProductCard = ({
   // Handle open product details dialog
   const handleProductClick = (e) => {
     e.stopPropagation();
+
+    // Check if restaurant is closed (only after branch/address is selected)
+    if (restaurantOpen == false) {
+      auth.toastError(`${t('restaurantIsClosedNow')} ${restaurantCloseMessage ? `\n ${restaurantCloseMessage}` : ''}`);
+      return;
+    }
+
     setSelectedProduct(product);
     setShowProductDialog(true);
   };
@@ -141,9 +166,12 @@ const ProductCard = ({
               )}
             </div>
             <button
-              onClick={handleProductClick}
-              className={`p-1.5 bg-mainColor text-whiteColor rounded-full hover:bg-mainColor/90 transition-all duration-200 flex-shrink-0 shadow-sm hover:shadow-md transform hover:scale-105 ${!showActions ? 'opacity-0 pointer-events-none' : ''}`}
-              title={t('quickAddToCart')}
+              onClick={handleQuickAddToCart}
+              disabled={restaurantOpen == false}
+              className={`p-1.5 rounded-full transition-all duration-200 flex-shrink-0 shadow-sm hover:shadow-md transform hover:scale-105 
+                ${!showActions ? 'opacity-0 pointer-events-none' : ''} 
+                ${restaurantOpen == false ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-mainColor text-whiteColor hover:bg-mainColor/90'}`}
+              title={restaurantOpen == false ? t('restaurantIsClosedNow') : t('quickAddToCart')}
             >
               <Plus className="h-3.5 w-3.5" />
             </button>

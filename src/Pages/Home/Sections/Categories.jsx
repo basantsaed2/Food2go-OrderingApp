@@ -1,16 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCategories } from './../../../Store/Slices/CategoriesSlice';
+import { setCategories, setRestaurantStatus } from './../../../Store/Slices/CategoriesSlice';
 import StaticSpinner from '../../../Components/Spinners/StaticSpinner';
 import { ChevronLeft, ChevronRight, Play, Pause } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useGet } from '../../../Hooks/useGet';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '../../../Context/Auth';
 
 const Categories = () => {
   const apiUrl = import.meta.env.VITE_API_BASE_URL;
   const selectedLanguage = useSelector((state) => state.language?.selected ?? 'en');
   const { t } = useTranslation();
+  const auth = useAuth();
   const isRTL = selectedLanguage === 'ar';
 
   const [categoriesData, setCategoriesData] = useState(null);
@@ -47,18 +49,29 @@ const Categories = () => {
     url: `${apiUrl}/customer/home/categories?locale=${selectedLanguage}&${getCategoryQueryString()}`,
   });
 
-  // Refetch products when language changes
+  // Refetch categories when language, order type, or location changes
   useEffect(() => {
     refetchCategories();
-  }, [selectedLanguage, refetchCategories]);
+  }, [selectedLanguage, orderType, selectedAddressId, selectedBranchId, refetchCategories]);
 
-  // Store the data in state
+  // Store the data in state and check restaurant status
   useEffect(() => {
     if (dataCategories && !loadingCategories) {
       setCategoriesData(dataCategories.categories);
       dispatch(setCategories(dataCategories?.categories || []));
+
+      // Store restaurant open status and close message
+      dispatch(setRestaurantStatus({
+        open: dataCategories.open ?? true,
+        closeMessage: dataCategories.close_message || ''
+      }));
+
+      // Show toast if restaurant is closed
+      if (dataCategories.open == false && dataCategories.close_message) {
+        auth.toastError(`${dataCategories.close_message}`);
+      }
     }
-  }, [dataCategories, dispatch, loadingCategories]);
+  }, [dataCategories, dispatch, loadingCategories, auth]);
 
   // Auto-scroll functionality with RTL support
   useEffect(() => {
@@ -237,7 +250,7 @@ const Categories = () => {
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         .scrollbar-hide::-webkit-scrollbar {
           display: none;
         }

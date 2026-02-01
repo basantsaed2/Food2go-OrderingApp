@@ -133,6 +133,7 @@ const resources = {
       addedToCart: 'added to cart',
       addedToFavorites: 'added to favorites',
       removedFromFavorites: 'removed from favorites',
+      restaurantIsClosedNow: 'Restaurant is closed now',
       //Branch
       OurBranches: 'Our Branches',
       FindOurLocationsNearYou: 'Find Our Locations NearYou',
@@ -354,7 +355,7 @@ const resources = {
       ServiceFees: "Service Fees",
       Address: "Address",
       EnterFullAddress: "Enter Full Address",
-       PleaseProvideReason: "Please Provide Reason",
+      PleaseProvideReason: "Please Provide Reason",
       CancelOrder: "Cancel Order",
       Reason: "Reason",
       EnterReason: "Enter Reason",
@@ -710,6 +711,7 @@ const resources = {
       addedToCart: 'تمت الإضافة إلى السلة',
       addedToFavorites: 'تمت الإضافة إلى المفضلة',
       removedFromFavorites: 'تم الإزالة من المفضلة',
+      restaurantIsClosedNow: 'المطعم مغلق الآن',
 
       Item: "عنصر",
       Items: "عناصر",
@@ -723,12 +725,12 @@ const resources = {
       Address: "العنوان",
       EnterFullAddress: "أدخل العنوان بالكامل",
 
-       PleaseProvideReason: "من فضلك ادخل سبب الالغاء",
+      PleaseProvideReason: "من فضلك ادخل سبب الالغاء",
       CancelOrder: "الغاء الطلب",
       Reason: "سبب الالغاء",
       EnterReason: "أدخل سبب الالغاء",
       ConfirmCancel: "تأكيد الغاء الطلب",
- 
+
     }
   }
 };

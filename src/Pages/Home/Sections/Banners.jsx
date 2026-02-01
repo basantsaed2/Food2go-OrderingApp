@@ -143,7 +143,7 @@ const Banners = () => {
                       alt={banner.title || `Banner ${index + 1}`}
                       className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-1000 group-hover:scale-105"
                       loading={index === 0 ? 'eager' : 'lazy'}
-                      fetchPriority={index === 0 ? 'high' : 'auto'}
+                      fetchpriority={index === 0 ? 'high' : 'auto'}
                       decoding="async"
                     />
 
@@ -246,8 +246,8 @@ const Banners = () => {
                 key={index}
                 onClick={() => goToSlide(index)}
                 className={`transition-all duration-300 rounded-full ${index === currentSlide
-                    ? 'w-8 h-3 opacity-100'
-                    : 'w-3 h-3 opacity-60 hover:opacity-80'
+                  ? 'w-8 h-3 opacity-100'
+                  : 'w-3 h-3 opacity-60 hover:opacity-80'
                   }`}
                 style={{
                   backgroundColor: index === currentSlide ? 'var(--color-main, #d7030b)' : '#d1d5db'

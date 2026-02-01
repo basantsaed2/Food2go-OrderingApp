@@ -6,6 +6,7 @@ import taxTypeSlice from './Slices/taxTypeSlice';
 import cartSlice from './Slices/cartSlice';
 import orderTypeSlice from './Slices/orderTypeSlice';
 import favoritesSlice from './Slices/favoritesSlice'; // Add this import
+import categoriesReducer from './Slices/CategoriesSlice';
 import { configureStore } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
@@ -20,6 +21,7 @@ const reducers = combineReducers({
   taxType: taxTypeSlice,
   orderType: orderTypeSlice,
   favorites: favoritesSlice, // Add favorites reducer
+  categories: categoriesReducer,
 });
 
 const persistConfig = {

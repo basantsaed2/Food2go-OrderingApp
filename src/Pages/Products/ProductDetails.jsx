@@ -32,6 +32,8 @@ const ProductDetails = ({ product, onClose, language, showActions = true }) => {
   const [displayProduct, setDisplayProduct] = useState(product);
   const user = useSelector(state => state.user?.data?.user);
   const selectedLanguage = useSelector(state => state.language?.selected || 'en');
+  const restaurantOpen = useSelector((state) => state.categories?.open ?? true);
+  const restaurantCloseMessage = useSelector((state) => state.categories?.closeMessage || '');
 
   const savedOrderType = localStorage.getItem('orderType');
   const selectedAddressId =
@@ -357,6 +359,12 @@ const ProductDetails = ({ product, onClose, language, showActions = true }) => {
       onClose();
       auth.toastError(t('pleaseSelectOrderTypeFirst'));
       setTimeout(() => navigate("/order_online"), 1500);
+      return;
+    }
+
+    // Check if restaurant is closed (only after branch/address is selected)
+    if (restaurantOpen == false) {
+      auth.toastError(`${restaurantCloseMessage ? `\n ${restaurantCloseMessage}` : ''}`);
       return;
     }
 
@@ -800,16 +808,28 @@ const ProductDetails = ({ product, onClose, language, showActions = true }) => {
           {/* Add to Cart Button */}
           {showActions && (
             <div className="sticky bottom-0 p-4 bg-white border-t mt-auto">
-              <button
-                onClick={handleAddToCart}
-                disabled={!canAddToCart()}
-                className={`w-full py-3 rounded-lg font-semibold transition-colors ${canAddToCart()
-                  ? 'bg-mainColor text-whiteColor hover:bg-mainColor/90'
-                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                  }`}
-              >
-                {canAddToCart() ? t('addToCart') : t('completeSelection')}
-              </button>
+              {restaurantOpen == false ? (
+                <button
+                  disabled
+                  className="w-full py-3 px-4 rounded-lg font-semibold bg-gray-300 text-gray-500 cursor-not-allowed flex flex-col items-center justify-center leading-tight"
+                >
+                  <span>{t('restaurantIsClosedNow')}</span>
+                  {restaurantCloseMessage && (
+                    <span className="text-xs mt-1 font-normal">{restaurantCloseMessage}</span>
+                  )}
+                </button>
+              ) : (
+                <button
+                  onClick={handleAddToCart}
+                  disabled={!canAddToCart()}
+                  className={`w-full py-3 rounded-lg font-semibold transition-colors ${canAddToCart()
+                    ? 'bg-mainColor text-whiteColor hover:bg-mainColor/90'
+                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                    }`}
+                >
+                  {canAddToCart() ? t('addToCart') : t('completeSelection')}
+                </button>
+              )}
             </div>
           )}
         </div>
