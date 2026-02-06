@@ -21,7 +21,7 @@ const LandingPage = () => {
     const iosEnabled = companyInfo?.company_info?.ios_switch === 1 && companyInfo?.company_info?.ios_link;
 
     return (
-        <div className="w-full h-screen flex flex-col gap-6 items-center overflow-hidden">
+        <div className="w-full h-screen flex flex-col gap-6 items-center justify-center overflow-hidden">
             <div className="w-full flex flex-col md:flex-row pb-0 p-2 md:p-6">
 
                 {/* Left Side: Logo and Name */}
