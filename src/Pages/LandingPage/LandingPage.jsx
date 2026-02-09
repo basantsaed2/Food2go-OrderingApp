@@ -105,7 +105,7 @@ const LandingPage = () => {
                 </Link>
 
                 {/* Support and Privacy Policy Links */}
-                {/* <div className="flex items-center justify-center gap-4 text-sm">
+                <div className="flex items-center justify-center gap-4 text-sm">
                     <Link to="/support" className="text-gray-500 hover:text-mainColor transition-colors">
                         {t("support")}
                     </Link>
@@ -113,7 +113,7 @@ const LandingPage = () => {
                     <Link to="/policy" className="text-gray-500 hover:text-mainColor transition-colors">
                         {t("privacyPolicy")}
                     </Link>
-                </div> */}
+                </div>
             </div>
         </div>
     );
