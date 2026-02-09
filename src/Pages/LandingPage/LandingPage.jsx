@@ -98,10 +98,23 @@ const LandingPage = () => {
             </div>
 
             {/* Footer */}
-            <Link to="https://food2go.online/" target="_blank" className="flex items-center justify-center gap-2">
-                <h1 className="text-gray-600">{t("Poweredby")}</h1>
-                <img src={mainLogo} className="w-16 h-16" alt="Main Logo" />
-            </Link>
+            <div className="flex flex-col items-center justify-center gap-2">
+                <Link to="https://food2go.online/" target="_blank" className="flex items-center justify-center gap-2">
+                    <h1 className="text-gray-600">{t("Poweredby")}</h1>
+                    <img src={mainLogo} className="w-16 h-16" alt="Main Logo" />
+                </Link>
+
+                {/* Support and Privacy Policy Links */}
+                {/* <div className="flex items-center justify-center gap-4 text-sm">
+                    <Link to="/support" className="text-gray-500 hover:text-mainColor transition-colors">
+                        {t("support")}
+                    </Link>
+                    <div className="w-1 h-1 bg-gray-300 rounded-full"></div>
+                    <Link to="/policy" className="text-gray-500 hover:text-mainColor transition-colors">
+                        {t("privacyPolicy")}
+                    </Link>
+                </div> */}
+            </div>
         </div>
     );
 }

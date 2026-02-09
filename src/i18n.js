@@ -360,6 +360,8 @@ const resources = {
       Reason: "Reason",
       EnterReason: "Enter Reason",
       ConfirmCancel: "Confirm Cancel",
+      support: "Support",
+      privacyPolicy: "Privacy Policy",
     }
   },
   ar: {
@@ -730,7 +732,8 @@ const resources = {
       Reason: "سبب الالغاء",
       EnterReason: "أدخل سبب الالغاء",
       ConfirmCancel: "تأكيد الغاء الطلب",
-
+      support: "الدعم والمساعدة",
+      privacyPolicy: "سياسة الخصوصية",
     }
   }
 };

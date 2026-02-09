@@ -542,7 +542,11 @@ const Navbar = () => {
                                                     {t('Orders')}
                                                 </span>
                                             </Link>
+                                        </>
+                                    )}
 
+                                    {isLoggedIn && user && (
+                                        <>
                                             {/* Logout in Sidebar for logged-in users */}
                                             <button
                                                 onClick={() => {
@@ -564,12 +568,31 @@ const Navbar = () => {
                             </div>
 
                             {/* Footer */}
-                            <div className="p-2 border-t border-gray-100 bg-gray-50">
-                                <div className="flex items-center justify-center space-x-3 text-gray-600">
+                            <div className="p-4 border-t border-gray-100 bg-gray-50">
+                                <div className="flex flex-col items-center justify-center gap-3">
                                     <Link to="https://food2go.online/" target="_blank" className="flex items-center justify-center gap-2">
                                         <h1 className="text-gray-600">{t("Poweredby")}</h1>
-                                        <img src={mainLogo} className="w-16 h-16" alt="Main Logo" />
+                                        <img src={mainLogo} className="w-12 h-12" alt="Main Logo" />
                                     </Link>
+
+                                    {/* Support and Privacy Policy Links in Footer */}
+                                    <div className="flex items-center justify-center gap-4 text-sm text-gray-500">
+                                        <Link
+                                            to="/support"
+                                            className="hover:text-mainColor transition-colors"
+                                            onClick={() => setIsMobileMenuOpen(false)}
+                                        >
+                                            {t("support")}
+                                        </Link>
+                                        <div className="w-1 h-1 bg-gray-300 rounded-full"></div>
+                                        <Link
+                                            to="/policy"
+                                            className="hover:text-mainColor transition-colors"
+                                            onClick={() => setIsMobileMenuOpen(false)}
+                                        >
+                                            {t("privacyPolicy")}
+                                        </Link>
+                                    </div>
                                 </div>
                             </div>
                         </div>
