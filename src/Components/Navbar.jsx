@@ -17,6 +17,7 @@ const Navbar = () => {
     const languages = useSelector(state => state.language?.data || []);
     const selectedLanguage = useSelector(state => state.language?.selected || 'en');
     const [pages] = useState(['/login', '/signup']);
+    const companyInfo = useSelector(state => state.maintenance?.data);
     const auth = useAuth();
 
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -86,11 +87,12 @@ const Navbar = () => {
             i18nKey: 'electronicMenu',
             path: '/electronic_menu'
         },
-        {
+        // Only show Order Online if enabled
+        ...(companyInfo?.company_info?.order_online === 1 ? [{
             icon: ShoppingCart,
             i18nKey: 'orderOnline',
             path: '/order_online'
-        },
+        }] : []),
     ];
 
     const handleLanguageChange = (newLangCode) => {
@@ -399,13 +401,16 @@ const Navbar = () => {
                                         <ProfileDropdown />
                                     </div>
                                 ) : (
-                                    <button
-                                        onClick={handleLogin}
-                                        className="px-6 py-2 font-medium text-whiteColor transition-all duration-200 bg-white border border-white rounded-full bg-opacity-20 hover:bg-opacity-30 border-opacity-30"
-                                        style={{ color: 'var(--color-main)' }}
-                                    >
-                                        <span style={{ color: 'white' }}>{t('login')}</span>
-                                    </button>
+                                    // Only show login button if ordering is enabled
+                                    companyInfo?.company_info?.order_online === 1 && (
+                                        <button
+                                            onClick={handleLogin}
+                                            className="px-6 py-2 font-medium text-whiteColor transition-all duration-200 bg-white border border-white rounded-full bg-opacity-20 hover:bg-opacity-30 border-opacity-30"
+                                            style={{ color: 'var(--color-main)' }}
+                                        >
+                                            <span style={{ color: 'white' }}>{t('login')}</span>
+                                        </button>
+                                    )
                                 )}
                             </div>
 
@@ -486,13 +491,16 @@ const Navbar = () => {
                                             </button>
                                         </div>
                                     ) : (
-                                        <button
-                                            onClick={handleLogin}
-                                            className="w-full py-3 font-medium text-whiteColor transition-all duration-200 rounded-lg shadow-lg hover:opacity-90"
-                                            style={{ backgroundColor: 'var(--color-main)' }}
-                                        >
-                                            {t('loginSignUp')}
-                                        </button>
+                                        // Only show login/signup in mobile menu if ordering is enabled
+                                        companyInfo?.company_info?.order_online === 1 && (
+                                            <button
+                                                onClick={handleLogin}
+                                                className="w-full py-3 font-medium text-whiteColor transition-all duration-200 rounded-lg shadow-lg hover:opacity-90"
+                                                style={{ backgroundColor: 'var(--color-main)' }}
+                                            >
+                                                {t('loginSignUp')}
+                                            </button>
+                                        )
                                     )}
                                 </div>
 

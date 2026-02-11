@@ -48,10 +48,23 @@ const LandingPage = () => {
                             </Link>
                         </div>
 
+
                         <div className="w-full">
-                            <Link to="/order_online" className="bg-thirdColor flex gap-3 items-center justify-center rounded-xl p-2">
+                            <Link
+                                to={companyInfo?.company_info?.order_online === 1 ? "/order_online" : "#"}
+                                className={`bg-thirdColor flex gap-3 items-center justify-center rounded-xl p-2 relative overflow-hidden ${companyInfo?.company_info?.order_online === 0 ? 'cursor-not-allowed opacity-80' : ''}`}
+                                onClick={(e) => {
+                                    if (companyInfo?.company_info?.order_online === 0) e.preventDefault();
+                                }}
+                            >
                                 <MdOutlineRestaurantMenu size={36} className="text-mainColor" />
                                 <h1 className="text-2xl text-mainColor">{t("orderNow")}</h1>
+
+                                {companyInfo?.company_info?.order_online === 0 && (
+                                    <div className="absolute inset-0 flex items-center justify-center bg-black/60 z-10">
+                                        <FaLock className="text-white text-3xl drop-shadow-md" />
+                                    </div>
+                                )}
                             </Link>
                         </div>
                     </div>
