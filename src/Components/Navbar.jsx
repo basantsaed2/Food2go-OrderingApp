@@ -584,21 +584,29 @@ const Navbar = () => {
                                     </Link>
 
                                     {/* Support and Privacy Policy Links in Footer */}
-                                    <div className="flex items-center justify-center gap-4 text-sm text-gray-500">
-                                        <Link
-                                            to="/support"
-                                            className="hover:text-mainColor transition-colors"
-                                            onClick={() => setIsMobileMenuOpen(false)}
-                                        >
-                                            {t("support")}
+                                    <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 text-xs text-gray-500 mt-2 px-2">
+                                        <Link to="/menu" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-mainColor transition-colors text-center">
+                                            {t("realProducts")}
                                         </Link>
-                                        <div className="w-1 h-1 bg-gray-300 rounded-full"></div>
-                                        <Link
-                                            to="/policy"
-                                            className="hover:text-mainColor transition-colors"
-                                            onClick={() => setIsMobileMenuOpen(false)}
-                                        >
+                                        <span className="text-gray-300">•</span>
+                                        <Link to="/support" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-mainColor transition-colors text-center">
+                                            {t("contactUsFooter")}
+                                        </Link>
+                                        <span className="text-gray-300">•</span>
+                                        <Link to="/branches" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-mainColor transition-colors text-center">
+                                            {t("addressFooter")}
+                                        </Link>
+                                        <span className="text-gray-300">•</span>
+                                        <Link to="/policy" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-mainColor transition-colors text-center">
                                             {t("privacyPolicy")}
+                                        </Link>
+                                        <span className="text-gray-300">•</span>
+                                        <Link to="/delivery_policy" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-mainColor transition-colors text-center">
+                                            {t("deliveryShippingPolicy")}
+                                        </Link>
+                                        <span className="text-gray-300">•</span>
+                                        <Link to="/refund_policy" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-mainColor transition-colors text-center">
+                                            {t("refundCancellationPolicy")}
                                         </Link>
                                     </div>
                                 </div>

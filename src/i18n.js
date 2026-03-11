@@ -362,6 +362,13 @@ const resources = {
       ConfirmCancel: "Confirm Cancel",
       support: "Support",
       privacyPolicy: "Privacy Policy",
+
+      // New footer/home keys
+      realProducts: 'Real products & Real prices',
+      contactUsFooter: 'Contact us',
+      addressFooter: 'Address',
+      deliveryShippingPolicy: 'Delivery & shipping policy',
+      refundCancellationPolicy: 'Refund & cancellation policy',
     }
   },
   ar: {
@@ -734,6 +741,13 @@ const resources = {
       ConfirmCancel: "تأكيد الغاء الطلب",
       support: "الدعم والمساعدة",
       privacyPolicy: "سياسة الخصوصية",
+
+      // New footer/home keys
+      realProducts: 'منتجات حقيقية وأسعار حقيقية',
+      contactUsFooter: 'تواصل معنا',
+      addressFooter: 'العنوان',
+      deliveryShippingPolicy: 'سياسة التوصيل والشحن',
+      refundCancellationPolicy: 'سياسة الاسترجاع والإلغاء',
     }
   }
 };

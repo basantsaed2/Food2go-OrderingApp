@@ -118,13 +118,29 @@ const LandingPage = () => {
                 </Link>
 
                 {/* Support and Privacy Policy Links */}
-                <div className="flex items-center justify-center gap-4 text-sm">
-                    <Link to="/support" className="text-gray-500 hover:text-mainColor transition-colors">
-                        {t("support")}
+                <div className="hidden md:flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-xs font-medium pb-2 px-2 max-w-5xl mx-auto">
+                    <Link to="/menu" className="text-gray-500 hover:text-mainColor transition-colors text-center">
+                        {t("realProducts")}
                     </Link>
-                    <div className="w-1 h-1 bg-gray-300 rounded-full"></div>
-                    <Link to="/policy" className="text-gray-500 hover:text-mainColor transition-colors">
+                    <div className="w-1 h-1 bg-gray-300 rounded-full hidden md:block"></div>
+                    <Link to="/support" className="text-gray-500 hover:text-mainColor transition-colors text-center">
+                        {t("contactUsFooter")}
+                    </Link>
+                    <div className="w-1 h-1 bg-gray-300 rounded-full hidden md:block"></div>
+                    <Link to="/branches" className="text-gray-500 hover:text-mainColor transition-colors text-center">
+                        {t("addressFooter")}
+                    </Link>
+                    <div className="w-1 h-1 bg-gray-300 rounded-full hidden md:block"></div>
+                    <Link to="/policy" className="text-gray-500 hover:text-mainColor transition-colors text-center">
                         {t("privacyPolicy")}
+                    </Link>
+                    <div className="w-1 h-1 bg-gray-300 rounded-full hidden md:block"></div>
+                    <Link to="/delivery_policy" className="text-gray-500 hover:text-mainColor transition-colors text-center">
+                        {t("deliveryShippingPolicy")}
+                    </Link>
+                    <div className="w-1 h-1 bg-gray-300 rounded-full hidden md:block"></div>
+                    <Link to="/refund_policy" className="text-gray-500 hover:text-mainColor transition-colors text-center">
+                        {t("refundCancellationPolicy")}
                     </Link>
                 </div>
             </div>
