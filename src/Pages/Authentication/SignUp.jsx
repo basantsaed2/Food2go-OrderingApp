@@ -86,6 +86,60 @@ const SignUpPage = () => {
         return re.test(phone);
     };
 
+    // const handleSignUp = (e) => {
+    //     e.preventDefault();
+    //     setErrors({});
+    //     setSuccessMessage('');
+
+    //     const newErrors = {};
+    //     if (!firstName) newErrors.firstName = t("PleaseEnterYourFirstName");
+    //     if (!lastName) newErrors.lastName = t("PleaseEnterYourLastName");
+    //     if (verificationMethod === 'phone') {
+    //         if (!validatePhone(phone)) newErrors.phone = t("PleaseEnterAValidPhoneNumber");
+    //     }
+    //     if (verificationMethod === 'email') {
+    //         if (!validateEmail(email)) newErrors.email = t("PleaseEnterAValidEmailAddress");
+    //     }
+
+    //     if (!password)
+    //         newErrors.password = t("PleaseEnterAPassword");
+    //     if (configPassword !== password) newErrors.configPassword = t("PasswordsDoNotMatch");
+
+    //     if (Object.keys(newErrors).length > 0) {
+    //         setErrors(newErrors);
+    //         return;
+    //     }
+
+    //     const payload = {
+    //         f_name: firstName,
+    //         l_name: lastName,
+    //         phone_2: optionalPhone,
+    //         password,
+    //         conf_password: configPassword,
+    //     };
+
+    //     if (verificationMethod === 'phone' || phone) {
+    //         payload.phone = phone;
+    //     }
+
+    //     if (verificationMethod === 'email' || email) {
+    //         payload.email = email;
+    //     }
+
+    //     if (token) {
+    //         Number(token) === code ? postSignUp(payload) : setErrors({ token: t("InvalidOTPCode") });
+    //     } else {
+    //         if (verificationMethod === 'email') {
+    //             postEmail({ email: payload.email });
+    //         }
+    //         if (verificationMethod === 'phone') {
+    //             postPhone({ phone: payload.phone });
+    //         }
+    //     }
+    // };
+
+
+    // add manuel login edit
     const handleSignUp = (e) => {
         e.preventDefault();
         setErrors({});
@@ -94,10 +148,10 @@ const SignUpPage = () => {
         const newErrors = {};
         if (!firstName) newErrors.firstName = t("PleaseEnterYourFirstName");
         if (!lastName) newErrors.lastName = t("PleaseEnterYourLastName");
-        if (verificationMethod === 'phone') {
+        if (verificationMethod === 'phone' || (verificationMethod === null && phone)) {
             if (!validatePhone(phone)) newErrors.phone = t("PleaseEnterAValidPhoneNumber");
         }
-        if (verificationMethod === 'email') {
+        if (verificationMethod === 'email' || (verificationMethod === null && email)) {
             if (!validateEmail(email)) newErrors.email = t("PleaseEnterAValidEmailAddress");
         }
 
@@ -116,24 +170,19 @@ const SignUpPage = () => {
             phone_2: optionalPhone,
             password,
             conf_password: configPassword,
+            phone,
+            email,
         };
-
-        if (verificationMethod === 'phone' || phone) {
-            payload.phone = phone;
-        }
-
-        if (verificationMethod === 'email' || email) {
-            payload.email = email;
-        }
 
         if (token) {
             Number(token) === code ? postSignUp(payload) : setErrors({ token: t("InvalidOTPCode") });
         } else {
             if (verificationMethod === 'email') {
                 postEmail({ email: payload.email });
-            }
-            if (verificationMethod === 'phone') {
+            } else if (verificationMethod === 'phone') {
                 postPhone({ phone: payload.phone });
+            } else if (verificationMethod === null) {
+                postSignUp(payload);
             }
         }
     };
