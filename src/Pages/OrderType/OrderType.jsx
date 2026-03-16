@@ -112,19 +112,23 @@ const OrderType = () => {
   // Process branches and order types data
   useEffect(() => {
     if (branchesData && !loadingBranches) {
-      setOrderTypes(branchesData.order_types || []);
+      const availableTypes = branchesData.order_types || [];
+      setOrderTypes(availableTypes);
       setBranches(branchesData.branches || []);
-      // If only delivery exists, auto-select delivery
-      if (
-        branchesData.order_types?.length === 1 &&
-        branchesData.order_types[0].type === 'delivery' &&
-        user?.token &&
-        selectedOrderType !== 'delivery'
-      ) {
-        setSelectedOrderType('delivery');
-        dispatch(setOrderType('delivery'));
-      } else if (!selectedOrderType && branchesData.order_types?.length > 0) {
-        const defaultType = branchesData.order_types.find((type) => type.type === 'take_away') || branchesData.order_types[0];
+
+      if (!selectedOrderType && availableTypes.length > 0) {
+        const hasDelivery = availableTypes.some((type) => type.type === 'delivery');
+        const hasTakeAway = availableTypes.some((type) => type.type === 'take_away');
+
+        let defaultType;
+        if (user?.token && hasDelivery) {
+          defaultType = availableTypes.find((type) => type.type === 'delivery');
+        } else if (hasTakeAway) {
+          defaultType = availableTypes.find((type) => type.type === 'take_away');
+        } else {
+          defaultType = availableTypes[0];
+        }
+
         if (defaultType) {
           setSelectedOrderType(defaultType.type);
           dispatch(setOrderType(defaultType.type));
@@ -135,6 +139,32 @@ const OrderType = () => {
       auth.toastError(t('failedToLoadBranches'));
     }
   }, [branchesData, loadingBranches, branchesError, auth, t, selectedOrderType, dispatch, user?.token]);
+
+  // useEffect(() => {
+  //   if (branchesData && !loadingBranches) {
+  //     setOrderTypes(branchesData.order_types || []);
+  //     setBranches(branchesData.branches || []);
+  //     // If only delivery exists, auto-select delivery
+  //     if (
+  //       branchesData.order_types?.length === 1 &&
+  //       branchesData.order_types[0].type === 'delivery' &&
+  //       user?.token &&
+  //       selectedOrderType !== 'delivery'
+  //     ) {
+  //       setSelectedOrderType('delivery');
+  //       dispatch(setOrderType('delivery'));
+  //     } else if (!selectedOrderType && branchesData.order_types?.length > 0) {
+  //       const defaultType = branchesData.order_types.find((type) => type.type === 'take_away') || branchesData.order_types[0];
+  //       if (defaultType) {
+  //         setSelectedOrderType(defaultType.type);
+  //         dispatch(setOrderType(defaultType.type));
+  //       }
+  //     }
+  //   }
+  //   if (branchesError) {
+  //     auth.toastError(t('failedToLoadBranches'));
+  //   }
+  // }, [branchesData, loadingBranches, branchesError, auth, t, selectedOrderType, dispatch, user?.token]);
 
   // Process categories data
   // useEffect(() => {
@@ -182,7 +212,7 @@ const OrderType = () => {
   const handleBranchSelect = useCallback(
     (branch) => {
       if (branch.status === 0) {
-        auth.toastError(branch.block_reason ? branch.block_reason  :  t('BranchBlockedDefault'));
+        auth.toastError(branch.block_reason ? branch.block_reason : t('BranchBlockedDefault'));
         return;
       }
       dispatch(setSelectedBranch(branch.id));
