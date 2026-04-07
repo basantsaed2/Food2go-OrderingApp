@@ -1,12 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
+import { useCurrency } from '../../../Hooks/useCurrency';
 import { MdWork, MdDelete, MdLocationOn, MdStore } from 'react-icons/md';
 import { FiHome } from 'react-icons/fi';
 import StaticSpinner from '../../../Components/Spinners/StaticSpinner';
 
 const AddressItem = React.memo(({ address, isSelected, onSelect, onDelete }) => {
   const { t } = useTranslation();
+  const currency = useCurrency();
 
   return (
     <div
@@ -42,7 +44,7 @@ const AddressItem = React.memo(({ address, isSelected, onSelect, onDelete }) => 
         <div className="flex items-center justify-between pt-2 mt-2 border-t border-gray-200 group-hover:border-white">
           <div className="flex flex-col">
             <span className="text-xs font-medium">
-              {t('DeliveryFee')}: {address?.zone?.price || address.price || '0'} {t('egp')}
+              {t('DeliveryFee')}: {address?.zone?.price || address.price || '0'} {currency}
             </span>
           </div>
 

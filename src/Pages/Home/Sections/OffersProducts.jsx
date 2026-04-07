@@ -6,11 +6,13 @@ import { Link } from 'react-router-dom';
 import { useGet } from '../../../Hooks/useGet';
 import ProductDetails from '../../Products/ProductDetails';
 import { useTranslation } from 'react-i18next';
+import { useCurrency } from '../../../Hooks/useCurrency';
 
 const OffersProducts = () => {
   const apiUrl = import.meta.env.VITE_API_BASE_URL;
   const selectedLanguage = useSelector((state) => state.language?.selected ?? 'en');
   const { t } = useTranslation();
+  const currency = useCurrency();
   const isRTL = selectedLanguage === 'ar';
 
   const dispatch = useDispatch();
@@ -220,18 +222,18 @@ const OffersProducts = () => {
                     <div className="mt-auto flex justify-between items-center">
                       <div className={isRTL ? 'text-right' : 'text-left'}>
                         <span className="text-red-600 font-bold text-lg">
-                          {product.price_after_discount} {t('egp')}
+                          {product.price_after_discount} {currency}
                         </span>
                         {product.price_after_discount < product.price && (
                           <span className="text-gray-500 text-sm line-through ml-2">
-                            {product.price} {t('egp')}
+                            {product.price} {currency}
                           </span>
                         )}
                       </div>
                     </div>
                     {product.price_after_discount < product.price && (
                       <p className={`text-green-600 text-xs mt-1 ${isRTL ? 'text-right' : 'text-left'}`}>
-                        {t('save')} {(product.price - product.price_after_discount)} {t('egp')}!
+                        {t('save')} {(product.price - product.price_after_discount)} {currency}!
                       </p>
                     )}
                   </div>

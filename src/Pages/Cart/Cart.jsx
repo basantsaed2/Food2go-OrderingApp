@@ -12,6 +12,7 @@ import { usePost } from '../../Hooks/usePost';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useCurrency } from '../../Hooks/useCurrency';
 
 const Cart = () => {
   const dispatch = useDispatch();
@@ -23,6 +24,7 @@ const Cart = () => {
   const selectedBranchId = useSelector(state => state.orderType?.selectedBranchId || localStorage.getItem('selectedBranchId'));
   const apiUrl = import.meta.env.VITE_API_BASE_URL;
   const { t } = useTranslation();
+  const currency = useCurrency();
 
   const getId = () => {
     if (orderType === 'delivery') return selectedAddressId;
@@ -125,7 +127,7 @@ const Cart = () => {
                         {(item.taxDetails && item.taxDetails.totalTax > 0) && taxSysType !== "included" && (
                           <div className="mb-2">
                             <span className="px-2 py-1 text-xs text-blue-800 bg-blue-100 rounded">
-                              Tax (Product & Addons): {item.taxDetails.totalTax.toFixed(2)} {t("egp")}
+                              Tax (Product & Addons): {item.taxDetails.totalTax.toFixed(2)} {currency}
                             </span>
                           </div>
                         )}
@@ -141,11 +143,11 @@ const Cart = () => {
                         {/* Price per item */}
                         <div className="flex items-center gap-2 mb-3">
                           <span className="text-lg font-bold text-mainColor">
-                            {(item.totalPrice / item.quantity).toFixed(2)} {t("egp")}
+                            {(item.totalPrice / item.quantity).toFixed(2)} {currency}
                           </span>
                           {item.product.discount_val > 0 && (
                             <span className="text-sm text-red-500 line-through">
-                              {item.product.price} {t("egp")}
+                              {item.product.price} {currency}
                             </span>
                           )}
                         </div>
@@ -247,7 +249,7 @@ const Cart = () => {
                       </div>
 
                       <span className="text-xl font-bold text-mainColor">
-                        {item.totalPrice.toFixed(2)} {t("egp")}
+                        {item.totalPrice.toFixed(2)} {currency}
                       </span>
                     </div>
                   </div>
@@ -268,19 +270,19 @@ const Cart = () => {
             <div className="mb-6 space-y-3">
               <div className="flex justify-between text-gray-600">
                 <span>{t("Subtotal")} ({itemCount} {t("items")})</span>
-                <span>{subtotal.toFixed(2)} {t("egp")}</span>
+                <span>{subtotal.toFixed(2)} {currency}</span>
               </div>
 
               {totalDiscount > 0 && (
                 <div className="flex justify-between text-green-600">
                   <span>{t("Discount")}</span>
-                  <span>-{totalDiscount.toFixed(2)} {t("egp")}</span>
+                  <span>-{totalDiscount.toFixed(2)} {currency}</span>
                 </div>
               )}
 
               <div className="flex justify-between text-blue-600">
                 <span>{t("PriceAfterDiscount")}</span>
-                <span>{priceAfterDiscount.toFixed(2)} {t("egp")}</span>
+                <span>{priceAfterDiscount.toFixed(2)} {currency}</span>
               </div>
               {/* 
               {serviceFees && (
@@ -294,7 +296,7 @@ const Cart = () => {
                   <span>
                     +{((serviceFees.type === 'percentage' || serviceFees.type === 'precentage')
                       ? (subtotal * parseFloat(serviceFees.amount)) / 100
-                      : parseFloat(serviceFees.amount)).toFixed(2)} {t("egp")}
+                      : parseFloat(serviceFees.amount)).toFixed(2)} {currency}
                   </span>
                 </div>
               )} */}
@@ -302,7 +304,7 @@ const Cart = () => {
               {(hasExcludedTax && totalTax > 0) && taxSysType !== "included" && (
                 <div className="flex justify-between text-orange-600">
                   <span>{t("TaxProductAndAddons")}</span>
-                  <span>+{totalTax.toFixed(2)} {t("egp")}</span>
+                  <span>+{totalTax.toFixed(2)} {currency}</span>
                 </div>
               )}
 
@@ -310,9 +312,9 @@ const Cart = () => {
                 <div className="flex justify-between text-lg font-bold text-gray-900">
                   <span>{t("Total")}</span>
                   {taxSysType === "included" ? (
-                    <span>{priceAfterDiscount.toFixed(2)} {t("egp")}</span>
+                    <span>{priceAfterDiscount.toFixed(2)} {currency}</span>
                   ) : (
-                    <span>{total.toFixed(2)} {t("egp")}</span>
+                    <span>{total.toFixed(2)} {currency}</span>
                   )}
                   {/*
                   //if it need to calculate service fees
@@ -326,7 +328,7 @@ const Cart = () => {
                       }
                     }
                     const totalWithService = (taxSysType === "included" ? priceAfterDiscount : total) + serviceFeesAmount;
-                    return <span>{totalWithService.toFixed(2)} {t("egp")}</span>;
+                    return <span>{totalWithService.toFixed(2)} {currency}</span>;
                   })()} */}
                 </div>
               </div>
@@ -344,7 +346,7 @@ const Cart = () => {
                         <div className="font-medium">{item.product.name}</div>
                         {item.taxDetails.taxBreakdown.map((taxItem, taxIndex) => (
                           <div key={taxIndex} className="ml-2">
-                            {taxItem.name}: {taxItem.taxAmount.toFixed(2)} {t("egp")} ({taxItem.taxRate}%)
+                            {taxItem.name}: {taxItem.taxAmount.toFixed(2)} {currency} ({taxItem.taxRate}%)
                           </div>
                         ))}
                       </div>

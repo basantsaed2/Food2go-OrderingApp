@@ -8,6 +8,7 @@ import { toggleFavorite } from '../Store/Slices/favoritesSlice'; // Import the a
 import { useChangeState } from '../Hooks/useChangeState';
 import { useAuth } from '../Context/Auth';
 import { useTranslation } from 'react-i18next';
+import { useCurrency } from '../Hooks/useCurrency';
 
 const ProductCard = ({
   product,
@@ -16,6 +17,7 @@ const ProductCard = ({
   showActions = true // Default to true to maintain existing behavior
 }) => {
   const { t } = useTranslation();
+  const currency = useCurrency();
   const apiUrl = import.meta.env.VITE_API_BASE_URL;
   const dispatch = useDispatch();
   const { changeState } = useChangeState();
@@ -157,11 +159,11 @@ const ProductCard = ({
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
               <span className="text-mainColor font-bold text-sm">
-                {product.price_after_discount || product.price} {t('egp')}
+                {product.price_after_discount || product.price} {currency}
               </span>
               {product.discount > 0 && (
                 <span className="text-red-500 text-xs line-through">
-                  {product.price} {t('egp')}
+                  {product.price} {currency}
                 </span>
               )}
             </div>

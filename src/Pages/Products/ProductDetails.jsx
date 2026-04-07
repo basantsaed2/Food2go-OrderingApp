@@ -9,9 +9,11 @@ import StaticSpinner from '../../Components/Spinners/StaticSpinner';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../Context/Auth';
 import { useNavigate } from 'react-router-dom';
+import { useCurrency } from '../../Hooks/useCurrency';
 
 const ProductDetails = ({ product, onClose, language, showActions = true }) => {
   const { t } = useTranslation();
+  const currency = useCurrency();
   const apiUrl = import.meta.env.VITE_API_BASE_URL;
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -445,17 +447,17 @@ const ProductDetails = ({ product, onClose, language, showActions = true }) => {
               <div className="flex items-center gap-2">
                 {displayData.discount_val > 0 && (
                   <span className="text-red-500 line-through">
-                    {displayData.price} {t('egp')}
+                    {displayData.price} {currency}
                   </span>
                 )}
                 <span className="text-lg font-bold text-mainColor">
-                  {displayData.price_after_discount || displayData.price} {t('egp')}
+                  {displayData.price_after_discount || displayData.price} {currency}
                 </span>
               </div>
             </div>
             {taxSetting === 'included' && displayData.tax_val > 0 && (
               <div className="mt-1 text-sm text-gray-600">
-                {t('taxIncluded')}: {displayData.tax_val} {t('egp')}
+                {t('taxIncluded')}: {displayData.tax_val} {currency}
               </div>
             )}
           </div>
@@ -517,7 +519,7 @@ const ProductDetails = ({ product, onClose, language, showActions = true }) => {
 
                       {option.price > 0 && (
                         <span className="font-semibold text-mainColor">
-                          +{option.price} {t('egp')}
+                          +{option.price} {currency}
                         </span>
                       )}
                     </label>
@@ -575,7 +577,7 @@ const ProductDetails = ({ product, onClose, language, showActions = true }) => {
                         <span className={isSelected ? 'font-medium' : ''}>{option.name}</span>
                         {option.price > 0 && (
                           <span className="text-sm font-semibold text-mainColor">
-                            +{option.price} {t('egp')}
+                            +{option.price} {currency}
                           </span>
                         )}
                       </div>
@@ -647,7 +649,7 @@ const ProductDetails = ({ product, onClose, language, showActions = true }) => {
                           <span>{addon.name}</span>
                         </div>
                         <span className="font-semibold text-mainColor">
-                          +{addon.price} {t('egp')}
+                          +{addon.price} {currency}
                         </span>
                       </label>
                       {currentAddon?.checked && (
@@ -703,11 +705,11 @@ const ProductDetails = ({ product, onClose, language, showActions = true }) => {
                         <div className="flex items-center gap-2">
                           {hasDiscount && (
                             <span className="text-sm text-red-500 line-through">
-                              {extra.price} {t('egp')}
+                              {extra.price} {currency}
                             </span>
                           )}
                           <span className="font-semibold text-mainColor">
-                            +{extra.price_after_discount || extra.price} {t('egp')}
+                            +{extra.price_after_discount || extra.price} {currency}
                           </span>
                         </div>
                       </div>
@@ -802,7 +804,7 @@ const ProductDetails = ({ product, onClose, language, showActions = true }) => {
           <div className="flex items-center justify-between p-4 mb-6 rounded-lg bg-mainColor/10">
             <span className="text-lg font-semibold">{t('totalPrice')}</span>
             <span className="text-2xl font-bold text-mainColor">
-              {calculateTotalPrice().toFixed(2)} {t('egp')}
+              {calculateTotalPrice().toFixed(2)} {currency}
             </span>
           </div>
           {/* Add to Cart Button */}
