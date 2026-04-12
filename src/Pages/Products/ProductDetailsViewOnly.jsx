@@ -4,9 +4,11 @@ import { useGet } from '../../Hooks/useGet';
 import StaticSpinner from '../../Components/Spinners/StaticSpinner';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
+import { useCurrency } from '../../Hooks/useCurrency';
 
 const ProductDetailsViewOnly = ({ product, onClose, language }) => {
     const { t } = useTranslation();
+    const currency = useCurrency();
     const apiUrl = import.meta.env.VITE_API_BASE_URL;
     const user = useSelector(state => state.user?.data?.user);
 
@@ -97,17 +99,17 @@ const ProductDetailsViewOnly = ({ product, onClose, language }) => {
                             <div className="flex items-center gap-2">
                                 {displayData.discount_val > 0 && (
                                     <span className="text-red-500 line-through">
-                                        {displayData.price} {t('egp')}
+                                        {displayData.price} {currency}
                                     </span>
                                 )}
                                 <span className="text-lg font-bold text-mainColor">
-                                    {displayData.price_after_discount || displayData.price} {t('egp')}
+                                    {displayData.price_after_discount || displayData.price} {currency}
                                 </span>
                             </div>
                         </div>
                         {displayData.tax_val > 0 && (
                             <div className="mt-1 text-sm text-gray-600">
-                                {t('taxIncluded')}: {displayData.tax_val} {t('egp')}
+                                {t('taxIncluded')}: {displayData.tax_val} {currency}
                             </div>
                         )}
                     </div>
@@ -124,7 +126,7 @@ const ProductDetailsViewOnly = ({ product, onClose, language }) => {
                                             {variation.options.map((option) => (
                                                 <div key={option.id} className="px-3 py-1 bg-gray-100 rounded-full text-sm border border-gray-200">
                                                     {option.name}
-                                                    {option.price > 0 && <span className="text-mainColor ml-1">+{option.price} {t('egp')}</span>}
+                                                    {option.price > 0 && <span className="text-mainColor ml-1">+{option.price} {currency}</span>}
                                                 </div>
                                             ))}
                                         </div>
@@ -142,7 +144,7 @@ const ProductDetailsViewOnly = ({ product, onClose, language }) => {
                                 {addons.map((addon) => (
                                     <div key={addon.id} className="px-3 py-1 bg-gray-100 rounded-full text-sm border border-gray-200">
                                         {addon.name}
-                                        {addon.price > 0 && <span className="text-mainColor ml-1">+{addon.price} {t('egp')}</span>}
+                                        {addon.price > 0 && <span className="text-mainColor ml-1">+{addon.price} {currency}</span>}
                                     </div>
                                 ))}
                             </div>
@@ -157,7 +159,7 @@ const ProductDetailsViewOnly = ({ product, onClose, language }) => {
                                 {extras.map((extra) => (
                                     <div key={extra.id} className="px-3 py-1 bg-gray-100 rounded-full text-sm border border-gray-200">
                                         {extra.name}
-                                        {extra.price > 0 && <span className="text-mainColor ml-1">+{extra.price} {t('egp')}</span>}
+                                        {extra.price > 0 && <span className="text-mainColor ml-1">+{extra.price} {currency}</span>}
                                     </div>
                                 ))}
                             </div>

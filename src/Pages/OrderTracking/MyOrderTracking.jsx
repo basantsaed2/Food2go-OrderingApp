@@ -17,10 +17,12 @@ import {
 import { Dialog, DialogBackdrop, DialogPanel } from '@headlessui/react';
 import { MdWarning } from 'react-icons/md';
 import { useChangeState } from '../../Hooks/useChangeState';
+import { useCurrency } from '../../Hooks/useCurrency';
 
 const MyOrderTracking = () => {
   const apiUrl = import.meta.env.VITE_API_BASE_URL;
   const { t } = useTranslation();
+  const currency = useCurrency();
   const auth = useAuth();
   const navigate = useNavigate();
 
@@ -341,7 +343,7 @@ const MyOrderTracking = () => {
                     {t('Quantity')}: {product.count}
                   </p>
                   <p className="mt-2 text-lg font-bold text-mainColor">
-                    {formatPrice(product.total_product || order.price_after_tax)} EGP
+                    {formatPrice(product.total_product || order.price_after_tax)} {currency}
                   </p>
                 </div>
               </div>
@@ -356,7 +358,7 @@ const MyOrderTracking = () => {
                     <div key={addon.id} className="flex items-center justify-between text-sm">
                       <span className="text-gray-600">+ {addon.name}</span>
                       <span className="font-semibold text-gray-900">
-                        {formatPrice(addon.price_after_tax)} EGP
+                        {formatPrice(addon.price_after_tax)} {currency}
                       </span>
                     </div>
                   ))}
@@ -369,18 +371,18 @@ const MyOrderTracking = () => {
           <div className="pt-4 mt-4 border-t border-gray-200">
             <div className="flex items-center justify-between text-lg font-bold text-gray-900">
               <span>{t('TotalAmount')}</span>
-              <span className="text-mainColor">{formatPrice(order.amount)} EGP</span>
+              <span className="text-mainColor">{formatPrice(order.amount)} {currency}</span>
             </div>
             {order.delivery_price && (
               <div className="flex items-center justify-between mt-1 text-sm text-gray-600">
                 <span>{t('DeliveryFee')}</span>
-                <span>{formatPrice(order.delivery_price)} EGP</span>
+                <span>{formatPrice(order.delivery_price)} {currency}</span>
               </div>
             )}
             {order.total_discount > 0 && (
               <div className="flex items-center justify-between mt-1 text-sm text-green-600">
                 <span>{t('Discount')}</span>
-                <span>-{formatPrice(order.total_discount)} EGP</span>
+                <span>-{formatPrice(order.total_discount)} {currency}</span>
               </div>
             )}
           </div>

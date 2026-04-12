@@ -7,11 +7,13 @@ import { Link } from 'react-router-dom';
 import { useGet } from '../../../Hooks/useGet';
 import ProductDetails from '../../Products/ProductDetails';
 import { useTranslation } from 'react-i18next';
+import { useCurrency } from '../../../Hooks/useCurrency';
 
 const RecommendedProduct = () => {
   const apiUrl = import.meta.env.VITE_API_BASE_URL;
   const selectedLanguage = useSelector((state) => state.language?.selected ?? 'en');
   const { t } = useTranslation();
+  const currency = useCurrency();
   const isRTL = selectedLanguage === 'ar';
 
   const dispatch = useDispatch();
@@ -222,11 +224,11 @@ const RecommendedProduct = () => {
                     </p>
                     <div className={`mt-auto flex justify-between items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
                       <span className="text-mainColor font-bold text-lg">
-                        {product.price_after_discount || product.price} {t('egp')}
+                        {product.price_after_discount || product.price} {currency}
                       </span>
                       {product.price_after_discount && product.price_after_discount < product.price && (
                         <span className="text-gray-500 text-sm line-through">
-                          {product.price} {t('egp')}
+                          {product.price} {currency}
                         </span>
                       )}
                     </div>

@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from "../../Context/Auth";
 import { setServiceFees } from "../../Store/Slices/cartSlice";
+import { useCurrency } from "../../Hooks/useCurrency";
 
 const CheckOut = () => {
     const apiUrl = import.meta.env.VITE_API_BASE_URL;
@@ -31,6 +32,7 @@ const CheckOut = () => {
     const taxSysType = useSelector(state => state.taxType?.data || 'included');
     const auth = useAuth();
     const { t, i18n } = useTranslation();
+    const currency = useCurrency();
 
     // Get IDs from orderType slice with localStorage fallback
     const getOrderTypeFromStorage = () => {
@@ -567,7 +569,7 @@ const CheckOut = () => {
                                             <h3 className="font-semibold text-gray-900">{item.product.name}</h3>
                                             <p className="text-sm text-gray-600">{t('Qty')}: {item.quantity}</p>
                                             <p className="text-lg font-bold text-mainColor">
-                                                {item.totalPrice.toFixed(2)} {t("egp")}
+                                                {item.totalPrice.toFixed(2)} {currency}
                                             </p>
                                         </div>
                                     </div>
@@ -595,7 +597,7 @@ const CheckOut = () => {
                                         <p className="text-sm text-gray-600">{selectedAddress.additional_data}</p>
                                         {selectedAddress.zone?.price && (
                                             <p className="text-sm font-medium text-green-600">
-                                                {t("Deliveryfee")}: {selectedAddress.zone.price} {t("egp")}
+                                                {t("Deliveryfee")}: {selectedAddress.zone.price} {currency}
                                             </p>
                                         )}
                                     </div>
@@ -721,27 +723,27 @@ const CheckOut = () => {
                             <div className="mb-6 space-y-3">
                                 <div className="flex justify-between text-gray-600">
                                     <span>{t("Subtotal")} ({cart.itemCount} {t("items")})</span>
-                                    <span>{orderSummary.subtotal.toFixed(2)} {t("egp")}</span>
+                                    <span>{orderSummary.subtotal.toFixed(2)} {currency}</span>
                                 </div>
 
                                 {orderSummary.discount > 0 && (
                                     <div className="flex justify-between text-green-600">
                                         <span>{t('discount')}</span>
-                                        <span>-{orderSummary.discount.toFixed(2)} {t("egp")}</span>
+                                        <span>-{orderSummary.discount.toFixed(2)} {currency}</span>
                                     </div>
                                 )}
 
                                 {orderSummary.priceAfterDiscount > 0 && (
                                     <div className="flex justify-between text-blue-600">
                                         <span>{t('priceAfterDiscount')}</span>
-                                        <span>{orderSummary.priceAfterDiscount.toFixed(2)} {t("egp")}</span>
+                                        <span>{orderSummary.priceAfterDiscount.toFixed(2)} {currency}</span>
                                     </div>
                                 )}
 
                                 {(orderSummary.tax > 0) && taxSysType !== "included" && (
                                     <div className="flex justify-between text-blue-600">
                                         <span>{t('tax')}</span>
-                                        <span>+{orderSummary.tax.toFixed(2)} {t("egp")}</span>
+                                        <span>+{orderSummary.tax.toFixed(2)} {currency}</span>
                                     </div>
                                 )}
 
@@ -753,14 +755,14 @@ const CheckOut = () => {
                                                 ` (${cart.serviceFees.amount}%)`
                                             )}
                                         </span>
-                                        <span>+{orderSummary.serviceFees.toFixed(2)} {t("egp")}</span>
+                                        <span>+{orderSummary.serviceFees.toFixed(2)} {currency}</span>
                                     </div>
                                 )}
 
                                 {orderSummary.delivery > 0 && (
                                     <div className="flex justify-between text-purple-600">
                                         <span>{t('deliveryFee')}</span>
-                                        <span>+{orderSummary.delivery.toFixed(2)} {t("egp")}</span>
+                                        <span>+{orderSummary.delivery.toFixed(2)} {currency}</span>
                                     </div>
                                 )}
 
@@ -770,7 +772,7 @@ const CheckOut = () => {
                                             {t('paymentFee')} ({selectedPaymentMethod.feez_amount}%)
                                         </span>
                                         <span>
-                                            +{orderSummary.paymentFee.toFixed(2)} {t("egp")}
+                                            +{orderSummary.paymentFee.toFixed(2)} {currency}
                                         </span>
                                     </div>
                                 )}
@@ -779,7 +781,7 @@ const CheckOut = () => {
                                     <div className="flex justify-between text-lg font-bold text-gray-900">
                                         <span>{t('totalPrice')}</span>
                                         <span>
-                                            {displayTotal.toFixed(2)} {t("egp")}
+                                            {displayTotal.toFixed(2)} {currency}
                                         </span>
                                     </div>
                                 </div>
