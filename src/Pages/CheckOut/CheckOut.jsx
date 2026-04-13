@@ -490,8 +490,8 @@ const CheckOut = () => {
         if (responseOrder) {
             if (responseOrder.data?.paymentLink) {
                 window.open(responseOrder.data.paymentLink, "_blank");
-            } else if (responseOrder.data?.gedia) {
-                window.open(responseOrder.data.gedia, "_blank");
+            } else if (responseOrder.data?.gedia?.payment_url) {
+                window.open(responseOrder.data.gedia?.payment_url, "_blank");
             } else {
                 navigate(`/order_traking/${responseOrder?.data?.success}`, {
                     replace: true,
