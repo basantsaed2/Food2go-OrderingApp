@@ -69,34 +69,34 @@ const ProductCard = ({
   };
 
   // Handle quick add to cart
-  const handleQuickAddToCart = (e) => {
-    e.stopPropagation();
+  // const handleQuickAddToCart = (e) => {
+  //   e.stopPropagation();
 
-    // Check if branch or address is selected
-    if (!selectedBranchId && !selectedAddressId) {
-      // If no location selected, open product details instead
-      handleProductClick(e);
-      return;
-    }
+  //   // Check if branch or address is selected
+  //   if (!selectedBranchId && !selectedAddressId) {
+  //     // If no location selected, open product details instead
+  //     handleProductClick(e);
+  //     return;
+  //   }
 
-    // Check if restaurant is closed
-    if (restaurantOpen == false) {
-      auth.toastError(`${t('restaurantIsClosedNow')} ${restaurantCloseMessage ? `\n ${restaurantCloseMessage}` : ''}`);
-      return;
-    }
+  //   // Check if restaurant is closed
+  //   if (restaurantOpen == false) {
+  //     auth.toastError(`${t('restaurantIsClosedNow')} ${restaurantCloseMessage ? `\n ${restaurantCloseMessage}` : ''}`);
+  //     return;
+  //   }
 
-    const cartItem = {
-      product,
-      quantity: 1,
-      variations: {},
-      addons: {},
-      excludes: [],
-      extras: {},
-      note: '',
-    };
-    dispatch(addToCart(cartItem));
-    auth.toastSuccess(`${product.name} ${t('addedToCart')}`);
-  };
+  //   const cartItem = {
+  //     product,
+  //     quantity: 1,
+  //     variations: {},
+  //     addons: {},
+  //     excludes: [],
+  //     extras: {},
+  //     note: '',
+  //   };
+  //   dispatch(addToCart(cartItem));
+  //   auth.toastSuccess(`${product.name} ${t('addedToCart')}`);
+  // };
 
   // Handle open product details dialog
   const handleProductClick = (e) => {
@@ -168,7 +168,7 @@ const ProductCard = ({
               )}
             </div>
             <button
-              onClick={handleQuickAddToCart}
+              onClick={handleProductClick}
               disabled={restaurantOpen == false}
               className={`p-1.5 rounded-full transition-all duration-200 flex-shrink-0 shadow-sm hover:shadow-md transform hover:scale-105 
                 ${!showActions ? 'opacity-0 pointer-events-none' : ''} 
