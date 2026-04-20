@@ -750,7 +750,7 @@ const CheckOut = () => {
                                 {orderSummary.serviceFees > 0 && (
                                     <div className="flex justify-between text-blue-600">
                                         <span>
-                                            {t('ServiceFees')}
+                                            {cart.serviceFees?.title || t('ServiceFees')}
                                             {(cart.serviceFees?.type === 'percentage' || cart.serviceFees?.type === 'precentage') && (
                                                 ` (${cart.serviceFees.amount}%)`
                                             )}
