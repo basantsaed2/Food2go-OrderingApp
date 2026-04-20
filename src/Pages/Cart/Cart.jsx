@@ -281,7 +281,7 @@ const Cart = () => {
               )}
 
               <div className="flex justify-between text-blue-600">
-                <span>{t("PriceAfterDiscount")}</span>
+                <span>{t("priceAfterDiscount")}</span>
                 <span>{priceAfterDiscount.toFixed(2)} {currency}</span>
               </div>
               {/* 
