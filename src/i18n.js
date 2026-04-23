@@ -369,6 +369,10 @@ const resources = {
       addressFooter: 'Address',
       deliveryShippingPolicy: 'Delivery & shipping policy',
       refundCancellationPolicy: 'Refund & cancellation policy',
+      
+      // E-Menu
+      selectBranchToViewMenu: 'Please select a branch to view its menu',
+      changeBranch: 'Change Branch',
     }
   },
   ar: {
@@ -748,6 +752,10 @@ const resources = {
       addressFooter: 'العنوان',
       deliveryShippingPolicy: 'سياسة التوصيل والشحن',
       refundCancellationPolicy: 'سياسة الاسترجاع والإلغاء',
+      
+      // E-Menu
+      selectBranchToViewMenu: 'يرجى اختيار فرع لعرض القائمة',
+      changeBranch: 'تغيير الفرع',
     }
   }
 };

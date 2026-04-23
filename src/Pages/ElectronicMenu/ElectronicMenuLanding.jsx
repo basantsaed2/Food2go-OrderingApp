@@ -4,8 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import StaticSpinner from '../../Components/Spinners/StaticSpinner';
 import { useGet } from '../../Hooks/useGet';
 import { useTranslation } from 'react-i18next';
-import { Star, Tag, Utensils } from 'lucide-react';
+import { Star, Tag, Utensils, MapPin } from 'lucide-react';
 import { setSelectedBranch, setSelectedAddress, setOrderType } from '../../Store/Slices/orderTypeSlice';
+import BranchItem from '../OrderType/sections/BranchItem';
 
 const ElectronicMenuLanding = () => {
     const apiUrl = import.meta.env.VITE_API_BASE_URL;
@@ -19,8 +20,20 @@ const ElectronicMenuLanding = () => {
     const selectedAddressId = useSelector((state) => state.orderType?.selectedAddressId);
     const selectedBranchId = useSelector((state) => state.orderType?.selectedBranchId);
 
+    // Fetch branches
+    const {
+        loading: loadingBranches,
+        data: dataBranches,
+        refetch: refetchBranches
+    } = useGet({
+        url: `${apiUrl}/customer/address/lists1?locale=${selectedLanguage}`,
+    });
+
+    const selectedBranchName = dataBranches?.branches?.find(b => b.id === selectedBranchId)?.name;
+
     // Build API URL for categories - wrapped in useCallback to prevent infinite loops/unnecessary updates
     const buildCategoriesUrl = React.useCallback(() => {
+        if (!selectedBranchId) return null; // Don't fetch categories until branch is selected
         let url = `${apiUrl}/customer/home/categories?locale=${selectedLanguage}`;
         if (selectedAddressId && orderType === 'delivery') {
             url += `&address_id=${selectedAddressId}`;
@@ -38,31 +51,29 @@ const ElectronicMenuLanding = () => {
         url: buildCategoriesUrl(),
     });
 
+    useEffect(() => {
+        refetchBranches();
+    }, [selectedLanguage, refetchBranches]);
+
     // Explicitly refetch when dependencies change, matching OnlineMenu.jsx pattern
     useEffect(() => {
-        refetchCategories();
-    }, [buildCategoriesUrl, refetchCategories]);
-
-    // const SPECIAL_CATEGORIES = [
-    //     {
-    //         id: 'recommended',
-    //         name: t('recommendedProducts'),
-    //         image_link: mainData?.logo_link,
-    //         // description: t('checkoutRecommended') || 'Best selection just for you'
-    //     },
-    //     {
-    //         id: 'offers',
-    //         name: t('offersProducts'),
-    //         image_link: mainData?.logo_link,
-    //         // description: t('checkoutOffers') || 'Great deals and discounts'
-    //     }
-    // ];
+        if (selectedBranchId) {
+            refetchCategories();
+        }
+    }, [buildCategoriesUrl, refetchCategories, selectedBranchId]);
 
     const handleCategoryClick = (id) => {
         navigate(`/electronic_menu/items?category=${id}`);
     };
 
-    if (loadingCategories && !dataCategories) {
+    const handleBranchSelect = (branch) => {
+        dispatch(setSelectedBranch(branch.id));
+        dispatch(setOrderType('take_away'));
+        localStorage.setItem('selectedBranchId', branch.id);
+        localStorage.setItem('orderType', 'take_away');
+    };
+
+    if ((!selectedBranchId && loadingBranches) || (selectedBranchId && loadingCategories && !dataCategories)) {
         return (
             <div className="flex justify-center items-center py-12 min-h-screen">
                 <StaticSpinner />
@@ -70,8 +81,31 @@ const ElectronicMenuLanding = () => {
         );
     }
 
+    // Branch selection view
+    if (!selectedBranchId) {
+        const branches = dataBranches?.branches || [];
+        return (
+            <div className="min-h-screen bg-gray-50 py-8 px-4" dir={isRTL ? 'rtl' : 'ltr'}>
+                <div className="w-full p-2 md:p-6">
+                    <h1 className="text-3xl font-bold text-center text-gray-800 mb-2">{t('branches')}</h1>
+                    <p className="text-center text-gray-600 mb-8">{t('selectBranchToViewMenu') || 'Please select a branch to view its menu'}</p>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {branches.map((branch) => (
+                            <BranchItem
+                                key={branch.id}
+                                branch={branch}
+                                isSelected={selectedBranchId === branch.id}
+                                onClick={() => handleBranchSelect(branch)}
+                            />
+                        ))}
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     const allCategories = [
-        // ...SPECIAL_CATEGORIES,
         ...(dataCategories?.categories || []).map(cat => ({
             ...cat,
             // Use Utensils as default icon if no image/icon
@@ -82,8 +116,27 @@ const ElectronicMenuLanding = () => {
     return (
         <div className="min-h-screen bg-gray-50 py-8 px-4" dir={isRTL ? 'rtl' : 'ltr'}>
             <div className="w-full p-2 md:p-6">
-                <h1 className="text-3xl font-bold text-center text-gray-800 mb-2">{t('ourMenu')}</h1>
-                <p className="text-center text-gray-600 mb-8">{t('selectCategoryToViewProducts')}</p>
+                <div className="flex justify-between items-center mb-2">
+                    <div className="flex flex-col">
+                        <h1 className="text-3xl font-bold text-gray-800">{t('ourMenu')}</h1>
+                        {selectedBranchName && (
+                            <div className="flex items-center gap-1.5 mt-2 px-3 py-1.5 bg-mainColor/10 text-mainColor rounded-full w-fit border border-mainColor/20 shadow-sm transition-all hover:bg-mainColor/20">
+                                <MapPin size={16} className="text-mainColor" />
+                                <span className="text-sm font-bold">{selectedBranchName}</span>
+                            </div>
+                        )}
+                    </div>
+                    <button
+                        onClick={() => {
+                            dispatch(setSelectedBranch(null));
+                            localStorage.removeItem('selectedBranchId');
+                        }}
+                        className="text-sm font-medium text-mainColor hover:underline"
+                    >
+                        {t('changeBranch') || 'Change Branch'}
+                    </button>
+                </div>
+                <p className="text-gray-600 mb-8">{t('selectCategoryToViewProducts')}</p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6">
                     {allCategories.map((category) => (
