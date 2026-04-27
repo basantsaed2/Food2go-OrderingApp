@@ -369,7 +369,7 @@ const resources = {
       addressFooter: 'Address',
       deliveryShippingPolicy: 'Delivery & shipping policy',
       refundCancellationPolicy: 'Refund & cancellation policy',
-      
+
       // E-Menu
       selectBranchToViewMenu: 'Please select a branch to view its menu',
       changeBranch: 'Change Branch',
@@ -586,7 +586,7 @@ const resources = {
       addNewAddress: "إضافة عنوان جديد",
       Areyousureyouwanttodeletethislocation: "هل أنت متأكد أنك تريد حذف هذا الموقع؟",
       delivery: "توصيل",
-      'take away': "استلام من المتجر",
+      'take away': "استلام من الفرع",
       NoDeliveryAddressSelected: "لم يتم اختيار عنوان التوصيل",
       NoBranchSelected: "لم يتم اختيار الفرع",
       SelectDeliveryAddressBeforeProceeding: "يرجى اختيار عنوان التوصيل قبل المتابعة",
@@ -752,7 +752,7 @@ const resources = {
       addressFooter: 'العنوان',
       deliveryShippingPolicy: 'سياسة التوصيل والشحن',
       refundCancellationPolicy: 'سياسة الاسترجاع والإلغاء',
-      
+
       // E-Menu
       selectBranchToViewMenu: 'يرجى اختيار فرع لعرض القائمة',
       changeBranch: 'تغيير الفرع',
