@@ -487,15 +487,51 @@ const CheckOut = () => {
     };
 
     useEffect(() => {
-        if (responseOrder) {
-            if (responseOrder.data?.paymentLink) {
-                window.open(responseOrder.data.paymentLink, "_blank");
-            } else if (responseOrder.data?.gedia?.payment_url) {
-                window.open(responseOrder.data.gedia?.payment_url, "_blank");
-            } else {
-                navigate(`/order_traking/${responseOrder?.data?.success}`, {
-                    replace: true,
-                });
+        if (responseOrder && responseOrder.data) {
+            const orderData = responseOrder.data;
+
+            if (orderData.paymentLink) {
+                window.open(orderData.paymentLink, "_blank");
+            } else if (orderData.gedia_status === true && orderData.gedia) {
+                const { session_id, merchant_key } = orderData.gedia;
+
+                if (window.GeideaCheckout) {
+                    try {
+                        const config = {
+                            "merchantId": merchant_key,
+                            "onSuccess": (data) => {
+                                console.log("Success:", data);
+                                navigate(`/order_traking/${orderData.success}`, { replace: true });
+                            },
+                            "onError": (err) => {
+                                console.error("Error:", err);
+                                auth.toastError(err.message || t('paymentFailed'));
+                            },
+                            "onCancel": () => {
+                                auth.toastError(t('paymentCancelled'));
+                            }
+                        };
+
+                        const payment = new window.GeideaCheckout(config);
+
+                        if (typeof payment.startPayment === 'function') {
+                            payment.startPayment(session_id);
+                        }
+                        else if (typeof payment.authenticate === 'function') {
+                            payment.authenticate(session_id);
+                        }
+                        else if (typeof payment.show === 'function') {
+                            payment.show();
+                        } else {
+                            console.error("Could not find a valid start function");
+                        }
+
+                    } catch (err) {
+                        console.error("Geidea Initialization Error:", err);
+                    }
+                }
+            } else if (orderData.success) {
+                navigate(`/order_traking/${orderData.success}`, { replace: true });
             }
         }
     }, [responseOrder, navigate]);

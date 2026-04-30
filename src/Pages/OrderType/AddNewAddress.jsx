@@ -176,7 +176,6 @@ const AddNewAddress = () => {
       textColor: "#8b5cf6",
     },
   ];
-  // console.log("user", auth.user?.show_map)
 
   const showMap = auth.user?.show_map !== 0;
 

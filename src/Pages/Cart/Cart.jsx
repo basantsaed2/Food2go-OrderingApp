@@ -34,8 +34,6 @@ const Cart = () => {
 
   const id = getId();
 
-  console.log(id);
-
   const { postData: fetchServiceFees, response: serviceFeesResponse } = usePost({
     url: id ? `${apiUrl}/customer/home/service_fees/${id}?source=web` : '',
   });
