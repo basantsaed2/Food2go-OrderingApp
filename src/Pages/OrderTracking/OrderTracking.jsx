@@ -58,8 +58,6 @@ const OrderTraking = () => {
   useEffect(() => {
     if (dataOrder && !loadingOrders) {
       dispatch(clearCart())
-      // dispatch(removeTotlePrice());
-      // dispatch(removeAllProductsCard());
     }
   }, [loadingOrders, dataOrder, dispatch]);
 
@@ -108,23 +106,23 @@ const OrderTraking = () => {
                     />
                     <span
                       className={`${orderStatus === 'pending' ||
-                          orderStatus === 'processing' ||
-                          orderStatus === 'confirmed' ||
-                          orderStatus === 'out_for_delivery' ||
-                          orderStatus === 'delivered'
-                          ? 'border-mainColor'
-                          : 'border-secoundColor'
+                        orderStatus === 'processing' ||
+                        orderStatus === 'confirmed' ||
+                        orderStatus === 'out_for_delivery' ||
+                        orderStatus === 'delivered'
+                        ? 'border-mainColor'
+                        : 'border-secoundColor'
                         } h-16 border-2 border-dashed`}
                     ></span>
                   </div>
                   <span
                     className={`${orderStatus === 'pending' ||
-                        orderStatus === 'processing' ||
-                        orderStatus === 'confirmed' ||
-                        orderStatus === 'out_for_delivery' ||
-                        orderStatus === 'delivered'
-                        ? 'text-mainColor'
-                        : 'text-secoundColor'
+                      orderStatus === 'processing' ||
+                      orderStatus === 'confirmed' ||
+                      orderStatus === 'out_for_delivery' ||
+                      orderStatus === 'delivered'
+                      ? 'text-mainColor'
+                      : 'text-secoundColor'
                       } sm:text-2xl xl:text-4xl font-TextFontRegular`}
                   >
                     {t('OrderPlaced')}
@@ -145,21 +143,21 @@ const OrderTraking = () => {
                     />
                     <span
                       className={`${orderStatus === 'processing' ||
-                          orderStatus === 'confirmed' ||
-                          orderStatus === 'out_for_delivery' ||
-                          orderStatus === 'delivered'
-                          ? 'border-mainColor'
-                          : 'border-secoundColor'
+                        orderStatus === 'confirmed' ||
+                        orderStatus === 'out_for_delivery' ||
+                        orderStatus === 'delivered'
+                        ? 'border-mainColor'
+                        : 'border-secoundColor'
                         } h-16 border-2 border-dashed`}
                     ></span>
                   </div>
                   <span
                     className={`${orderStatus === 'processing' ||
-                        orderStatus === 'confirmed' ||
-                        orderStatus === 'out_for_delivery' ||
-                        orderStatus === 'delivered'
-                        ? 'text-mainColor'
-                        : 'text-secoundColor'
+                      orderStatus === 'confirmed' ||
+                      orderStatus === 'out_for_delivery' ||
+                      orderStatus === 'delivered'
+                      ? 'text-mainColor'
+                      : 'text-secoundColor'
                       } sm:text-2xl xl:text-4xl font-TextFontRegular`}
                   >
                     {t('Accept')}
@@ -179,19 +177,19 @@ const OrderTraking = () => {
                     />
                     <span
                       className={`${orderStatus === 'confirmed' ||
-                          orderStatus === 'out_for_delivery' ||
-                          orderStatus === 'delivered'
-                          ? 'border-mainColor'
-                          : 'border-secoundColor'
+                        orderStatus === 'out_for_delivery' ||
+                        orderStatus === 'delivered'
+                        ? 'border-mainColor'
+                        : 'border-secoundColor'
                         } h-16 border-2 border-dashed`}
                     ></span>
                   </div>
                   <span
                     className={`${orderStatus === 'confirmed' ||
-                        orderStatus === 'out_for_delivery' ||
-                        orderStatus === 'delivered'
-                        ? 'text-mainColor'
-                        : 'text-secoundColor'
+                      orderStatus === 'out_for_delivery' ||
+                      orderStatus === 'delivered'
+                      ? 'text-mainColor'
+                      : 'text-secoundColor'
                       } sm:text-2xl xl:text-4xl font-TextFontRegular`}
                   >
                     {t('Cooking')}
@@ -207,15 +205,15 @@ const OrderTraking = () => {
                     />
                     <span
                       className={`${orderStatus === 'out_for_delivery' || orderStatus === 'delivered'
-                          ? 'border-mainColor'
-                          : 'border-secoundColor'
+                        ? 'border-mainColor'
+                        : 'border-secoundColor'
                         } h-16 border-2 border-dashed`}
                     ></span>
                   </div>
                   <span
                     className={`${orderStatus === 'out_for_delivery' || orderStatus === 'delivered'
-                        ? 'text-mainColor'
-                        : 'text-secoundColor'
+                      ? 'text-mainColor'
+                      : 'text-secoundColor'
                       } sm:text-2xl xl:text-4xl font-TextFontRegular`}
                   >
                     {t('OrderIsOnTheWay')}
