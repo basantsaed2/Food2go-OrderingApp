@@ -150,30 +150,6 @@ const ProductDetails = ({ product, onClose, language, showActions = true }) => {
     }
   };
 
-  // const handleVariationChange = (variationId, optionId, type) => {
-  //   if (type === 'single') {
-  //     setSelectedVariations((prev) => {
-  //       // Click same → deselect
-  //       if (prev[variationId] === optionId) {
-  //         const { [variationId]: _, ...rest } = prev;
-  //         return rest;
-  //       }
-  //       // Click different → select new
-  //       return { ...prev, [variationId]: optionId };
-  //     });
-  //   } else {
-  //     // Multiple selection (checkbox behavior)
-  //     setSelectedVariations((prev) => {
-  //       const current = prev[variationId] || [];
-  //       if (current.includes(optionId)) {
-  //         return { ...prev, [variationId]: current.filter(id => id !== optionId) };
-  //       } else {
-  //         return { ...prev, [variationId]: [...current, optionId] };
-  //       }
-  //     });
-  //   }
-  // };
-
   const handleAddonChange = (addonId, checked) => {
     setSelectedAddons((prev) => ({
       ...prev,
@@ -462,83 +438,6 @@ const ProductDetails = ({ product, onClose, language, showActions = true }) => {
             )}
           </div>
           {/* Variations */}
-          {/* {displayData.variations?.map((variation) => (
-            <div key={variation.id} className="mb-6">
-              <h3 className="mb-3 font-semibold">
-                {variation.name} {variation.required && <span className="text-red-500">*</span>}
-                {variation.type === 'multiple' && (
-                  <span className="ml-2 text-sm text-gray-500">
-                    ({t('select')} {variation.min || 0}-{variation.max || '∞'})
-                  </span>
-                )}
-              </h3>
-
-              <div className="space-y-2">
-                {variation.options.map((option) => {
-                  const isSelected =
-                    variation.type === 'single'
-                      ? selectedVariations[variation.id] === option.id
-                      : (selectedVariations[variation.id] || []).includes(option.id);
-
-                  const selectedCount = (selectedVariations[variation.id] || []).length;
-                  const isAtMax = variation.type === 'multiple' && selectedCount >= variation.max && !isSelected;
-
-                  return (
-                    <label
-                      key={option.id}
-                      className={`
-        flex items-center justify-between p-3 border rounded-lg cursor-pointer transition-all
-        ${isAtMax ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-50'}
-      `}
-                      onClick={() => {
-                        if (isAtMax) return;
-                        handleVariationChange(variation.id, option.id, variation.type, variation.max);
-                      }}
-                    >
-                      <div className="flex items-center gap-3">
-                        {variation.type === 'single' ? (
-                          <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0
-            ${isSelected ? 'border-mainColor bg-mainColor' : 'border-gray-300'}`}>
-                            {isSelected && <div className="w-2.5 h-2.5 bg-white rounded-full" />}
-                          </div>
-                        ) : (
-                          <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center flex-shrink-0
-            ${isSelected ? 'border-mainColor bg-mainColor' : 'border-gray-300'}`}>
-                            {isSelected && (
-                              <svg className="w-3 h-3 text-white" viewBox="0 0 20 20" fill="currentColor">
-                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                              </svg>
-                            )}
-                          </div>
-                        )}
-
-                        <span className={isSelected ? 'font-medium' : ''}>
-                          {option.name}
-                        </span>
-                      </div>
-
-                      {option.price > 0 && (
-                        <span className="font-semibold text-mainColor">
-                          +{option.price} {currency}
-                        </span>
-                      )}
-                    </label>
-                  );
-                })}
-              </div>
-              {variation.required && variation.type === 'multiple' && (
-                (() => {
-                  const count = (selectedVariations[variation.id] || []).length;
-                  if (variation.min > 0 && count < variation.min) {
-                    return <p className="text-sm text-red-500 mt-2">{t('selectAtLeast', { count: variation.min })}</p>;
-                  }
-                  return null;
-                })()
-              )}
-            </div>
-          ))} */}
-
-          {/* Variations */}
           {displayData.variations?.map((variation) => (
             <div key={variation.id} className="mb-6">
               <h3 className="mb-3 font-semibold">
@@ -575,11 +474,11 @@ const ProductDetails = ({ product, onClose, language, showActions = true }) => {
                     >
                       <div className="flex items-center gap-3">
                         <span className={isSelected ? 'font-medium' : ''}>{option.name}</span>
-                        {option.price > 0 && (
+                        {/* {option.price > 0 && (
                           <span className="text-sm font-semibold text-mainColor">
                             +{option.price} {currency}
                           </span>
-                        )}
+                        )} */}
                       </div>
 
                       {variation.type === 'single' ? (
